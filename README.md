@@ -20,11 +20,17 @@ node server.js
 ├── README.md
 ├── backend
 ├── frontend
-│ ├── index.html
-│ └── static
-│     ├── css
-│     └── js
-│         └── router.js
+│   ├── index.html
+│   └── static
+│       └── js
+│           ├── router.js
+│           ├── routes.mjs
+│           ├── theme.mjs
+│           └── views
+│               ├── about.mjs
+│               ├── contact.mjs
+│               └── home.mjs
+├── package-lock.json
 ├── package.json
 └── server.js
 ```
