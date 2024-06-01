@@ -2,7 +2,7 @@ import { routes } from "./routes.mjs"
 import { themeHandler } from "./theme.mjs"
 
 const app = document.getElementById("app");
-let theme = document.querySelector("input[name=dark-mode]");
+const theme = document.querySelector("input[name=dark-mode]");
 
 const router = async () => {
     const potentialMatches = routes.map(route => {
@@ -38,6 +38,8 @@ document.addEventListener("DOMContentLoaded", () => {
             router();
         }
     });
-    theme.addEventListener('change', function() { themeHandler(document.body, this.checked) });
+    theme.addEventListener('change', function() { themeHandler(document.body, this) });
     router();
 });
+
+themeHandler(document.body, theme, true);
