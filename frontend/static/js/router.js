@@ -1,10 +1,8 @@
-const router = async () => {
-    const routes = [
-        { path: "/", view: () => console.log("viewing dashboard") },
-        { path: "/about", view: () => console.log("viewing about") },
-        { path: "/contact", view: () => console.log("viewing contact") }
-    ];
+import { routes } from "./routes.mjs"
 
+const app = document.getElementById("app");
+
+const router = async () => {
     const potentialMatches = routes.map(route => {
         return {
             route: route,
@@ -25,14 +23,15 @@ const router = async () => {
         }
     }
 
-    console.log(match.route.view())
-
+    match.route.view(app)
 };
 
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", e => {
        if (e.target.matches("[data-link]")) {
            e.preventDefault();
+           if (e.target.href === location.href)
+               return ;
            history.pushState({urlPath:e.target.href}, "", e.target.href);
            router();
        }
