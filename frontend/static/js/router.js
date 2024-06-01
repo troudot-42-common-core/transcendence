@@ -1,6 +1,8 @@
 import { routes } from "./routes.mjs"
+import { themeHandler } from "./theme.mjs"
 
 const app = document.getElementById("app");
+let theme = document.querySelector("input[name=dark-mode]");
 
 const router = async () => {
     const potentialMatches = routes.map(route => {
@@ -22,19 +24,20 @@ const router = async () => {
             isMatch: true,
         }
     }
-
     match.route.view(app)
 };
 
+
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", e => {
-       if (e.target.matches("[data-link]")) {
-           e.preventDefault();
-           if (e.target.href === location.href)
-               return ;
-           history.pushState({urlPath:e.target.href}, "", e.target.href);
-           router();
-       }
+        if (e.target.matches("[data-link]")) {
+            e.preventDefault();
+            if (e.target.href === location.href)
+                return;
+            history.pushState({urlPath: e.target.href}, "", e.target.href);
+            router();
+        }
     });
+    theme.addEventListener('change', function() { themeHandler(document.body, this.checked) });
     router();
 });
