@@ -21,8 +21,20 @@ node server.js
 ├── backend
 ├── frontend
 │   ├── index.html
+│   ├── languages
+│   │   ├── en
+│   │   │   ├── about.json
+│   │   │   ├── contact.json
+│   │   │   ├── home.json
+│   │   │   └── navbar.json
+│   │   └── fr
+│   │       ├── about.json
+│   │       ├── contact.json
+│   │       ├── home.json
+│   │       └── navbar.json
 │   └── static
 │       └── js
+│           ├── language.mjs
 │           ├── router.js
 │           ├── routes.mjs
 │           ├── theme.mjs
