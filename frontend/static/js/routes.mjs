@@ -1,10 +1,7 @@
-import { home } from "./views/home.mjs"
-import { about } from "./views/about.mjs"
-import { contact } from "./views/contact.mjs"
-
-const render = (app, html) => {
-    app.innerHTML = html;
-};
+import { home } from "../../components/body/home.mjs"
+import { about } from "../../components/body/about.mjs"
+import { contact } from "../../components/body/contact.mjs"
+import { render } from "./render.mjs"
 
 export const routes = [
         { path: "/", view: (app) => home(render, app)},

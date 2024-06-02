@@ -1,10 +1,10 @@
-export const about =  async (render, app) => {
+export const home =  async (render, div) => {
     const language = localStorage.getItem('language') || 'en';
-    const url = `languages/${language}/about.json`;
+    const url = `languages/${language}/home.json`;
     const response = await fetch(url);
     const data = await response.json();
 
-    render (app, `
+    render (div, `
         <div class="container d-flex  
          align-items-center  
          justify-content-center  

@@ -1,8 +1,10 @@
 import { routes } from "./routes.mjs"
 import { themeHandler } from "./theme.mjs"
 import { languageHandler } from "./language.mjs"
+import { renderBody, renderHeader } from "./render.mjs"
 
-const app = document.getElementById("app");
+const navbar = document.getElementById("navbar");
+const body = document.getElementById("app");
 const theme = document.querySelector("input[name=dark-mode]");
 const language = document.getElementById("languageSwitcher");
 
@@ -20,16 +22,12 @@ const router = async () => {
 
     let match = potentialMatches.find(isMatch);
 
-    // if unknown route
-    if (!match) {
-        match = {
-            route: routes[0],
-            isMatch: true,
-        }
-    }
-    match.route.view(app)
+    renderHeader();
+    renderBody(body, match);
 };
 
+
+window.addEventListener('popstate', router);
 
 document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", e => {
@@ -41,11 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
             router();
         }
     });
-    theme.addEventListener('change', function() { themeHandler(document.body, this) });
-    language.addEventListener('change', function() {
-        languageHandler(this);
-        router();
-    });
+    if (theme) {
+        theme.addEventListener('change', function () {
+            themeHandler(document.body, this)
+        });
+    } if (language) {
+        language.addEventListener('change', function() {
+            languageHandler(this);
+            router();
+        });
+    }
     router();
 });
 

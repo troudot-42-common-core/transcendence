@@ -1,4 +1,8 @@
 export const themeHandler = (body, checked, loading=false) => {
+    if (!body || !checked) {
+        return ;
+    }
+
     let theme = localStorage.getItem('theme') || 'light';
     if (theme === 'dark' && loading) {
         checked.checked = true;

@@ -4,8 +4,11 @@ const languages = {
 }
 
 export const languageHandler = (event, loading=false) => {
-    let setLanguage = localStorage.getItem('language') || 'en';
+    if (!event) {
+        return ;
+    }
 
+    let setLanguage = localStorage.getItem('language') || 'en';
     const actualLanguage = event.options[event.selectedIndex].getAttribute('id');
     if (setLanguage !== actualLanguage && loading) {
         switch (setLanguage) {

@@ -9,6 +9,11 @@ app.get("/languages/*", (req, res) => {
     res.sendFile(path.join(__dirname, "frontend", req.path));
 })
 
+app.get("/components/*", (req, res) => {
+    res.sendFile(path.join(__dirname, "frontend", req.path));
+})
+
+
 app.get("/*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "frontend", "index.html"));
 });

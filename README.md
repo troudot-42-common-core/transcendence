@@ -20,6 +20,12 @@ node server.js
 ├── README.md
 ├── backend
 ├── frontend
+│   ├── components
+│   │   ├── body
+│   │   │   ├── about.mjs
+│   │   │   ├── contact.mjs
+│   │   │   └── home.mjs
+│   │   └── header
 │   ├── index.html
 │   ├── languages
 │   │   ├── en
@@ -35,13 +41,10 @@ node server.js
 │   └── static
 │       └── js
 │           ├── language.mjs
+│           ├── render.mjs
 │           ├── router.js
 │           ├── routes.mjs
-│           ├── theme.mjs
-│           └── views
-│               ├── about.mjs
-│               ├── contact.mjs
-│               └── home.mjs
+│           └── theme.mjs
 ├── package-lock.json
 ├── package.json
 └── server.js
