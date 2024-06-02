@@ -9,8 +9,7 @@ export const renderHeader = async () => {
     const data = await response.json();
 
     document.getElementById("home").innerHTML = data.home;
-    document.getElementById("about").innerHTML = data.about;
-    document.getElementById("contact").innerHTML = data.contact;
+    document.getElementById("history").innerHTML = data.history;
 };
 
 export const renderBody = async (div, match) => {

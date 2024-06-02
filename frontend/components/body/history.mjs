@@ -1,6 +1,6 @@
-export const about =  async (render, div) => {
+export const history =  async (render, div) => {
     const language = localStorage.getItem('language') || 'en';
-    const url = `languages/${language}/about.json`;
+    const url = `languages/${language}/history.json`;
     const response = await fetch(url);
     const data = await response.json();
 

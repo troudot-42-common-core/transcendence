@@ -21,7 +21,7 @@
         body {
             color:var(--font-color);
             background:var(--bg-color);
-             transition: background 0.3s, color 0.3s;
+            transition: background 0.3s, color 0.3s;
         }
 
         h1:hover {
@@ -37,19 +37,21 @@
             color:var(--link-color);
             transition: color 0.2s;
         }
+
+        .container-fluid {
+             height: 100vh;
+             width: 100%;
+        }
     </style>
 </head>
 <body>
-    <div class="container text-center">
+    <div class="container-fluid px-0 overflow-hidden text-center">
         <div class="row align-items-start">
             <div class="col">
                 <a href="/" id="home" data-link></a>
             </div>
             <div class="col">
-                <a href="/about" id="about" data-link></a>
-            </div>
-            <div class="col">
-                <a href="/contact" id="contact" data-link></a>
+                <a href="/history" id="history" data-link></a>
             </div>
             <div class="col">
                 <div class="form-check form-switch">
@@ -63,9 +65,9 @@
                 </select>
             </div>
         </div>
+        <div id="app"></div>
     </div>
 
-    <div id="app"></div>
 
     <script src="static/js/router.js" type="module"></script>
 </body>
