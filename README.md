@@ -11,7 +11,7 @@ npm install
 ```
 ### Run
 ```zsh
-node server.js
+npm run dev
 ```
 
 ## Project Structure
@@ -23,23 +23,24 @@ node server.js
 │   ├── components
 │   │   ├── body
 │   │   │   ├── about.mjs
-│   │   │   ├── contact.mjs
+│   │   │   ├── history.mjs
 │   │   │   └── home.mjs
 │   │   └── header
 │   ├── index.html
 │   ├── languages
 │   │   ├── en
 │   │   │   ├── about.json
-│   │   │   ├── contact.json
+│   │   │   ├── history.json
 │   │   │   ├── home.json
 │   │   │   └── navbar.json
 │   │   └── fr
 │   │       ├── about.json
-│   │       ├── contact.json
+│   │       ├── history.json
 │   │       ├── home.json
 │   │       └── navbar.json
 │   └── static
 │       └── js
+│           ├── game.js
 │           ├── language.mjs
 │           ├── render.mjs
 │           ├── router.js
@@ -49,3 +50,13 @@ node server.js
 ├── package.json
 └── server.js
 ```
+
+## Pong - How to play
+
+Player 1 (left):
+- [W] -> GO UP
+- [S] -> GO DOWN
+
+Player 2 (right):
+- [ARROW UP] -> GO UP
+- [ARROW DOWN] -> GO DOWN
