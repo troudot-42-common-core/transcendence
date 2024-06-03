@@ -2,6 +2,7 @@ const scale = ((window.innerWidth * 0.7) * 0.75 <= window.innerHeight * 0.5) ? w
 
 const GAME = {
     maxScore: 5,
+    maxGameSaved: 10,
     scale: scale,
     size: {
         width: 400 * scale,
@@ -9,7 +10,7 @@ const GAME = {
     }, ball: {
         width: 10 * scale,
         height: 10 * scale,
-        speed: 2 * scale,
+        speed: 1.33 * scale,
     }, paddle: {
         width: 10 * scale,
         height: 50 * scale,
@@ -71,6 +72,13 @@ export class Game {
             vx: [-GAME.ball.speed, GAME.ball.speed].sample(),
             vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
         };
+        if (scoreReset) {
+            const game = {player1:"player1",score1:this.player.score,player2:"player2",score2:this.player2.score};
+            const data = JSON.parse(localStorage.getItem('history')) || [];
+            if (data.length >= GAME.maxGameSaved ) { data.splice(0, 1); }
+            data.push(game)
+            localStorage.setItem('history', JSON.stringify(data));
+        }
         this.player = {
             x: 0,
             y: this.canvas.height / 2,

@@ -6,18 +6,19 @@ export const home =  async (render, div) => {
     const response = await fetch(url);
     const data = await response.json();
 
-    render (div, `
+    render(div, `
         <div class="container d-flex  
             align-items-center  
             justify-content-center  
             min-vh-100"> 
             <canvas id="pong"></canvas>
-            <button type="button" class="btn btn-dark" id="startButton">Start</button>
+            <button type="button" class="btn btn-dark" id="startButton">${data.play}</button>
         </div>
+        
     `);
 
     let game = new Game('pong');
-    const theme = document.querySelector("input[name=dark-mode]");
+    const theme = document.querySelector('input[name=dark-mode]');
     const buttonStart = document.getElementById('startButton');
     game.render();
     theme.addEventListener('change', () => {
