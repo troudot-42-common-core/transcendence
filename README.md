@@ -22,19 +22,16 @@ npm run dev
 ├── frontend
 │   ├── components
 │   │   ├── body
-│   │   │   ├── about.mjs
 │   │   │   ├── history.mjs
 │   │   │   └── home.mjs
 │   │   └── header
 │   ├── index.html
 │   ├── languages
 │   │   ├── en
-│   │   │   ├── about.json
 │   │   │   ├── history.json
 │   │   │   ├── home.json
 │   │   │   └── navbar.json
 │   │   └── fr
-│   │       ├── about.json
 │   │       ├── history.json
 │   │       ├── home.json
 │   │       └── navbar.json
