@@ -1,4 +1,5 @@
 {
   "title": "Home Page",
-  "play": "Play"
+  "play": "Play",
+  "playerNameField": "Name of player"
 }

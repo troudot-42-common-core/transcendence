@@ -17,10 +17,19 @@ export const history =  async (render, div) => {
     const data = await response.json();
 
     render (div, `
-        <div class="container d-flex
+        <style>
+            table {
+                width: 10%;
+            }    
+            td, th {
+              text-align: center;
+            }
+        </style>
+        <div class="container-fluid d-flex
          align-items-center  
          justify-content-center  
          min-vh-100"> 
+         
          <div class="table-responsive">
               <table class="table table-bordered mb-0 bg-table">
                    <thead>

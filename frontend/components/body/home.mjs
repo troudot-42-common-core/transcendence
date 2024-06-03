@@ -1,30 +1,56 @@
-import { Game } from "../../static/js/game.js"
+import {Game} from "../../static/js/game.js"
 
-export const home =  async (render, div) => {
+export const home = async (render, div) => {
     const language = localStorage.getItem('language') || 'en';
     const url = `languages/${language}/home.json`;
     const response = await fetch(url);
     const data = await response.json();
 
     render(div, `
-        <div class="container d-flex  
-            align-items-center  
-            justify-content-center  
-            min-vh-100"> 
-            <canvas id="pong"></canvas>
-            <button type="button" class="btn btn-dark" id="startButton">${data.play}</button>
+        <style>
+            .container {
+                margin-left: auto;
+                margin-top: auto;
+                width: 70%;
+            }
+        </style>
+        <div class="container"> 
+            <div class="row">
+                <canvas id="pong"></canvas>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <div class="form-outline form-control-sm">
+                        <input type="text" class="form-control form" id="player1Name" placeholder="${data.playerNameField} 1"/>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-outline form-control-sm">
+                        <input type="text" class="form-control form" id="player2Name"placeholder="${data.playerNameField} 2"/>
+                    </div>
+                </div>
+                <button type="button" class="btn button" id="startButton">${data.play}</button>
+            </div>
         </div>
-        
     `);
 
     let game = new Game('pong');
     const theme = document.querySelector('input[name=dark-mode]');
     const buttonStart = document.getElementById('startButton');
+    const player1 = document.getElementById('player1Name');
+    const player2 = document.getElementById('player2Name');
+
     game.render();
+
     theme.addEventListener('change', () => {
-        if (game.ended) { game.render(); }
+        if (game.ended) {
+            game.render();
+        }
     });
     buttonStart.addEventListener('click', () => {
-        if (game.ended) { game.loop(true); }
+        if (game.ended && player1.value && player2.value && (player1.value !== player2.value)) {
+            game.setNames(player1.value, player2.value);
+            game.loop(true);
+        }
     });
 };

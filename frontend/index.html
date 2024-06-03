@@ -10,17 +10,23 @@
             --font-color: #000;
             --link-color:#f96d00;
             --bg-color: #f2f2f2;
-            --bg-table: #f2f2f2;
+            --bg-table: #eeeeee;
+            --btn-font-color: #393e46;
+            --btn-bg-color: #dedede;
+            --btn-bg-hover-color:var(--link-color);
         }
 
         body[theme="dark"] {
             --font-color: #f2f2f2;
-            --link-color:#f96d00;
             --bg-color: #222831;
-            --bg-table: #222831;
+            --bg-table: #262c36;
+            --btn-font-color: #dedede;
+            --btn-bg-color: #393e46;
         }
 
         body {
+            margin: 0;
+            padding: 0;
             color:var(--font-color);
             background:var(--bg-color);
             transition: background 0.3s, color 0.3s;
@@ -36,46 +42,64 @@
             transition: color 0.3s;
         }
 
-        a {
+        .nav-link {
             color:var(--font-color);
         }
 
-        a:hover {
+        .nav-link:hover {
             color:var(--link-color);
             transition: color 0.2s;
         }
 
-        .container-fluid {
-             height: 100vh;
-             width: 100%;
+        .button {
+            color: var(--btn-font-color);
+            background-color: var(--btn-bg-color);
+        }
+
+        .button:hover {
+            background-color: var(--btn-bg-hover-color);
+            transition: background-color 0.2s;
+        }
+
+        .form {
+
+            background-color: var(--btn-bg-color);
+            border: 0;
+        }
+
+        *:focus {
+            outline: 0 !important;
+            box-shadow: none !important;
         }
     </style>
 </head>
 <body>
-    <div class="container-fluid overflow-hidden">
-        <ul class="nav navbar-expand-sm justify-content-center">
-        <li class="nav-item">
-            <a href="/" id="home" data-link></a>
-        </li>
-        <li class="nav-item">
-            <a href="/history" id="history" data-link></a>
-        </li>
-        <li class="nav-item">
-            <div class="form-check form-switch">
-                <input class="form-check-input" role="switch" type="checkbox" name="dark-mode"/>
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <div class="collapse  navbar-collapse justify-content-center align-items-center">
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/" id="home" data-link></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/history" id="history" data-link></a>
+                    </li>
+                    <li class="nav-item">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" role="switch" type="checkbox" name="dark-mode"/>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <select data-width="fit" id="languageSwitcher">
+                            <option id="en">English</option>
+                            <option id="fr">Francais</option>
+                        </select>
+                    </li>
+                </ul>
             </div>
-        </li>
-        <li class="nav-item">
-            <select data-width="fit" id="languageSwitcher">
-                <option id="en">English</option>
-                <option id="fr">Francais</option>
-            </select>
-        </li>
-        </ul>
-        <div id="app"></div>
-    </div>
-
-
+        </div>
+    </nav>
+    <div id="app"></div>
     <script src="static/js/router.js" type="module"></script>
 </body>
 </html>

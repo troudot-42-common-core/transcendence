@@ -51,11 +51,13 @@ export class Game {
             vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
         };
         this.player = {
+            name: 'Undefined',
             x: 0,
             y: this.canvas.height / 2,
             score: 0,
         };
         this.player2 = {
+            name: 'Undefined',
             x: this.canvas.width - GAME.paddle.width,
             y: this.canvas.height / 2,
             score: 0,
@@ -73,18 +75,20 @@ export class Game {
             vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
         };
         if (scoreReset) {
-            const game = {player1:"player1",score1:this.player.score,player2:"player2",score2:this.player2.score};
+            const game = {player1:this.player.name,score1:this.player.score,player2:this.player2.name,score2:this.player2.score};
             const data = JSON.parse(localStorage.getItem('history')) || [];
             if (data.length >= GAME.maxGameSaved ) { data.splice(0, 1); }
             data.push(game)
             localStorage.setItem('history', JSON.stringify(data));
         }
         this.player = {
+            name: (scoreReset) ? 'Undefined' : this.player.name,
             x: 0,
             y: this.canvas.height / 2,
             score: (scoreReset) ? 0 : this.player.score,
         };
         this.player2 = {
+            name: (scoreReset) ? 'Undefined' : this.player2.name,
             x: this.canvas.width - GAME.paddle.width,
             y: this.canvas.height / 2,
             score: (scoreReset) ? 0 : this.player2.score,
@@ -106,7 +110,11 @@ export class Game {
         case 83:
             env.player.y += GAME.paddle.speed;
             break;
+        case 32:
+            if (env.ended) { this.loop(true); }
+            break;
         }
+
     }
 
     render = () => {
@@ -143,8 +151,18 @@ export class Game {
         this.ctx.shadowColor = 0;
     };
 
+    setNames = (name1, name2) => {
+        this.player.name = name1;
+        this.player2.name = name2;
+    };
+
+    namesHasSet = () => {
+        return !(this.player.name === 'Undefined' || this.player2.name === 'Undefined');
+    }
+
     loop = (first=false) => {
         if (first) { this.reset(); }
+        if (!this.namesHasSet()) { return ; }
         this.ended = false;
 
         this.ball.x += this.ball.vx;
