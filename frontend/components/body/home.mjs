@@ -37,19 +37,18 @@ export const home = async (render, div) => {
     let game = new Game('pong');
     const theme = document.querySelector('input[name=dark-mode]');
     const buttonStart = document.getElementById('startButton');
-    const player1 = document.getElementById('player1Name');
-    const player2 = document.getElementById('player2Name');
+    const names = {
+        player1: document.getElementById('player1Name'),
+        player2: document.getElementById('player2Name'),
+    }
 
     game.render();
-
     theme.addEventListener('change', () => {
-        if (game.ended) {
-            game.render();
-        }
+        if (game.ended) { game.render(); }
     });
     buttonStart.addEventListener('click', () => {
-        if (game.ended && player1.value && player2.value && (player1.value !== player2.value)) {
-            game.setNames(player1.value, player2.value);
+        if (game.ended && names.player1.value && names.player2.value && (names.player1.value !== names.player2.value)) {
+            game.setNames(names.player1.value, names.player2.value);
             game.loop(true);
         }
     });

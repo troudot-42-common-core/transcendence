@@ -24,6 +24,9 @@ export const history =  async (render, div) => {
             td, th {
               text-align: center;
             }
+            .button {
+                margin-top: 5px;
+            }
         </style>
         <div class="container-fluid d-flex
          align-items-center  
@@ -34,22 +37,30 @@ export const history =  async (render, div) => {
               <table class="table table-bordered mb-0 bg-table">
                    <thead>
                         <tr>
-                            <th scope="col">PLAYER</th>
-                            <th scope="col">SCORE</th>
-                            <th scope="col">PLAYER2</th>
-                            <th scope="col">SCORE</th>
+                            <th scope="col">${data.firstPlayer}</th>
+                            <th scope="col">${data.score}</th>
+                            <th scope="col">${data.secondPlayer}</th>
+                            <th scope="col">${data.score}</th>
                         </tr>
                    </thead>
                    <tbody id="table"></tbody>
               </table>
+              <button type="button" class="btn button w-100" id="clearButton">${data.clearHistory}</button>
             </div>
       </div>
     `);
 
     let table = document.getElementById("table");
-    let history = localStorage.getItem('history');
-    if (history) {
-        history = JSON.parse(history);
-        fillTableWithHistory(table, history);
+    let historyStorage = localStorage.getItem('history');
+    const clearButton = document.getElementById('clearButton');
+
+    clearButton.addEventListener('click', () => {
+        localStorage.removeItem('history');
+        history(render, div);
+    });
+    if (historyStorage) {
+        historyStorage = JSON.parse(historyStorage);
+        fillTableWithHistory(table, historyStorage);
     }
+
 };

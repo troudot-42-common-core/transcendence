@@ -17,9 +17,8 @@ const router = async () => {
     });
 
     const isMatch = (potentialMatch) => {
-        return potentialMatch.isMatch;
+        return potentialMatch.isMatch
     };
-
     let match = potentialMatches.find(isMatch);
 
     renderHeader();

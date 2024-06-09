@@ -1,8 +1,17 @@
 .idea
+.vscode
 .venv
 .env
+venv
+env
 
 node_modules
+__pycache__
+*.pyc
 
-package-lock.json
+lib
+bin
+
+db.sqlite3
+
 .DS_Store

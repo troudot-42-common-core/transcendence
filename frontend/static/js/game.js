@@ -82,13 +82,13 @@ export class Game {
             localStorage.setItem('history', JSON.stringify(data));
         }
         this.player = {
-            name: (scoreReset) ? 'Undefined' : this.player.name,
+            name: (scoreReset) ? undefined : this.player.name,
             x: 0,
             y: this.canvas.height / 2,
             score: (scoreReset) ? 0 : this.player.score,
         };
         this.player2 = {
-            name: (scoreReset) ? 'Undefined' : this.player2.name,
+            name: (scoreReset) ? undefined : this.player2.name,
             x: this.canvas.width - GAME.paddle.width,
             y: this.canvas.height / 2,
             score: (scoreReset) ? 0 : this.player2.score,
@@ -157,7 +157,7 @@ export class Game {
     };
 
     namesHasSet = () => {
-        return !(this.player.name === 'Undefined' || this.player2.name === 'Undefined');
+        return !(this.player.name === undefined || this.player2.name === undefined);
     }
 
     loop = (first=false) => {

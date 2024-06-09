@@ -1,3 +1,5 @@
+import { routes } from './routes.mjs';
+
 export const render = (div, html) => {
     div.innerHTML = html;
 };
@@ -8,8 +10,13 @@ export const renderHeader = async () => {
     const response = await fetch(url);
     const data = await response.json();
 
-    document.getElementById("home").innerHTML = data.home;
-    document.getElementById("history").innerHTML = data.history;
+    for (let route of routes) {
+        const page = document.getElementById(route.name);
+        if (page) { page.innerHTML = data[route.name]; }
+    }
+
+    // document.getElementById("home").innerHTML = data.home;
+    // document.getElementById("history").innerHTML = data.history;
 };
 
 export const renderBody = async (div, match) => {
