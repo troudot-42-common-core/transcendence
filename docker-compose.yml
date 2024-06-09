@@ -1,0 +1,57 @@
+services:
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      target: ${TARGET:-prod}
+    ports:
+      - ${FRONT_PORT}:${FRONT_PORT}
+    volumes:
+      - ./frontend:/app
+    environment:
+      - PORT=${FRONT_PORT}
+    depends_on:
+      backend:
+        condition: service_started
+
+  backend:
+    image: backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+      target: ${TARGET:-prod}
+    expose:
+      - ${API_PORT}
+    volumes:
+      - ./backend/app:/app
+    environment:
+      - PORT=${API_PORT}
+      - SECRET_KEY=${SECRET_KEY}
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+#    healthcheck:
+#      test: ["CMD", "curl", "-f", "http://backend:${API_PORT}/health"]
+#      interval: 10s
+#      timeout: 5s
+#      retries: 3
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres
+    ports:
+      - ${DB_PORT}:${DB_PORT}
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres:/var/lib/postgresql/data
+
+volumes:
+  postgres:
+    driver: local
