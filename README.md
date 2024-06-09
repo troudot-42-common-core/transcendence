@@ -4,14 +4,15 @@
 ```zsh
 git clone git@github.com:0x21x/ft_transcendence.git
 ```
-### Dependencies
-Be sure to have [node.js](https://nodejs.org/en/download/package-manager) before trying somes commands, npm is automatically installed with node.js 
-```zsh
-npm install
-```
+
 ### Run
 ```zsh
-npm run dev
+docker-compose up --build
+```
+
+### Stop
+```zsh
+docker-compose down
 ```
 
 ## Project Structure
