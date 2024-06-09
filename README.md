@@ -19,33 +19,72 @@ npm run dev
 ```zsh
 ├── README.md
 ├── backend
-├── frontend
-│   ├── components
-│   │   ├── body
-│   │   │   ├── history.mjs
-│   │   │   └── home.mjs
-│   │   └── header
-│   ├── index.html
-│   ├── languages
-│   │   ├── en
-│   │   │   ├── history.json
-│   │   │   ├── home.json
-│   │   │   └── navbar.json
-│   │   └── fr
-│   │       ├── history.json
-│   │       ├── home.json
-│   │       └── navbar.json
-│   └── static
-│       └── js
-│           ├── game.js
-│           ├── language.mjs
-│           ├── render.mjs
-│           ├── router.js
-│           ├── routes.mjs
-│           └── theme.mjs
-├── package-lock.json
-├── package.json
-└── server.js
+│   ├── Dockerfile
+│   └── app
+│       ├── app
+│       │   ├── __init__.py
+│       │   ├── asgi.py
+│       │   ├── routing.py
+│       │   ├── settings.py
+│       │   ├── urls.py
+│       │   └── wsgi.py
+│       ├── db.sqlite3
+│       ├── game
+│       │   ├── __init__.py
+│       │   ├── admin.py
+│       │   ├── apps.py
+│       │   ├── models.py
+│       │   ├── tests.py
+│       │   └── views.py
+│       ├── manage.py
+│       ├── requirements.txt
+│       ├── templates
+│       └── users
+│           ├── __init__.py
+│           ├── admin.py
+│           ├── apps.py
+│           ├── models.py
+│           ├── serlializers.py
+│           ├── tests.py
+│           ├── urls.py
+│           └── views.py
+├── docker-compose.yml
+└── frontend
+    ├── Dockerfile
+    ├── components
+    │   ├── body
+    │   │   ├── history.mjs
+    │   │   ├── home.mjs
+    │   │   ├── touramentComponents
+    │   │   │   ├── createTournament.mjs
+    │   │   │   └── setPlayersNames.mjs
+    │   │   └── tournament.mjs
+    │   └── header
+    ├── index.html
+    ├── languages
+    │   ├── en
+    │   │   ├── history.json
+    │   │   ├── home.json
+    │   │   ├── navbar.json
+    │   │   └── tournament.json
+    │   └── fr
+    │       ├── history.json
+    │       ├── home.json
+    │       ├── navbar.json
+    │       └── tournament.json
+    ├── package.json
+    ├── server.js
+    └── static
+        └── js
+            ├── bot.js
+            ├── game.js
+            ├── language.mjs
+            ├── render.mjs
+            ├── router.js
+            ├── routes.mjs
+            ├── theme.mjs
+            └── tournament.js
+
 ```
 
 ## Pong - How to play
