@@ -1,21 +1,26 @@
-FROM node:22-alpine3.19 as build
+FROM node:22-alpine3.20 as build
+
+RUN mkdir -p /node
+WORKDIR /node
+
+ADD package.json /node/package.json
+RUN npm install
+
+
+FROM node:22-alpine3.20 as runtime
+
+RUN apk add --no-cache curl
 
 # Create app directory
 RUN mkdir -p /app
-ADD . /app
+ADD app /app
+WORKDIR /app
+
+COPY --from=build /node/. /app/.
 
 # UnRoot User
 RUN addgroup -S app && adduser -S app -G app
 RUN chown -R app:app /app
 USER app
 
-WORKDIR /app
-
-RUN npm install
-
-FROM build as dev
-VOLUME /app
-CMD ["npm", "run", "dev"]
-
-FROM build as prod
-CMD ["npm", "run", "prod"]
+ENTRYPOINT ["npm", "run", "dev"]

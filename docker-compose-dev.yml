@@ -4,27 +4,42 @@ services:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-      target: ${TARGET:-prod}
+    develop:
+      watch:
+        - action: sync
+          path: ./frontend/app
+          target: /app
+          ignore:
+            - node_modules/
+        - action: rebuild
+          path: /frontend/package.json
     ports:
       - ${FRONT_PORT}:${FRONT_PORT}
-    volumes:
-      - ./frontend:/app
     environment:
       - PORT=${FRONT_PORT}
     depends_on:
       backend:
-        condition: service_started
+        condition: service_healthy
 
   backend:
     image: backend
     build:
       context: ./backend
       dockerfile: Dockerfile
-      target: ${TARGET:-prod}
+    develop:
+      watch:
+        - action: sync
+          path: ./backend/app
+          target: /app
+          ignore:
+            - .venv/
+            - .idea/
+        - action: rebuild
+          path: /backend/app/requirements.txt
+    ports:
+      - ${API_PORT}:${API_PORT}
     expose:
       - ${API_PORT}
-    volumes:
-      - ./backend/app:/app
     environment:
       - PORT=${API_PORT}
       - SECRET_KEY=${SECRET_KEY}
@@ -33,18 +48,22 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
-#    healthcheck:
-#      test: ["CMD", "curl", "-f", "http://backend:${API_PORT}/health"]
-#      interval: 10s
-#      timeout: 5s
-#      retries: 3
+    healthcheck:
+        test: curl --fail http://localhost:5002/health/ || exit 1
+        interval: 15s
+        timeout: 10s
+        retries: 3
+        start_period: 10s
+    restart: on-failure
     depends_on:
       - postgres
 
   postgres:
-    image: postgres
+    image: postgres:16.3-alpine3.19
     ports:
       - ${DB_PORT}:${DB_PORT}
+    expose:
+      - ${DB_PORT}
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
