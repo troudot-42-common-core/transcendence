@@ -26,3 +26,6 @@ Twisted==24.3.0
 txaio==23.1.1
 typing_extensions==4.12.1
 zope.interface==6.4.post2
+uuid==1.30
+django-annoying==0.10.6
+bcrypt==4.1.3

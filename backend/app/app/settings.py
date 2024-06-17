@@ -24,7 +24,11 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "localhost",
+    "0.0.0.0",
+    "10.18.207.215"
+]
 
 
 # Application definition
@@ -40,6 +44,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'game.apps.GameConfig',
+]
+
+AUTH_USER_MODEL = "users.Users"
+
+PASSWORD_HASHERS = [
+    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
 ]
 
 MIDDLEWARE = [

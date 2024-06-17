@@ -17,10 +17,10 @@ Including another URLconf
 from django.urls import include, path
 from django.shortcuts import HttpResponse
 
-def health_check():
-    return HttpResponse()
+def health_check(request):
+    return HttpResponse(200)
 
 urlpatterns = [
-    path('health', health_check),
-    path('', include('users.urls')),
+    path('health/', health_check),
+    path('api/auth/', include('users.urls')),
 ]

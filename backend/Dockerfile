@@ -42,4 +42,3 @@ RUN chown -R app:app /app
 USER app
 
 ENTRYPOINT ["/app/entrypoint.sh"]
-
