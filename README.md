@@ -6,6 +6,12 @@ git clone git@github.com:0x21x/ft_transcendence.git
 ```
 
 ### Run
+
+### @ Development
+```zsh
+docker-compose --file docker-compose-dev.yml up --build --watch
+```
+### @ Production
 ```zsh
 docker-compose up --build
 ```
@@ -19,6 +25,9 @@ docker-compose down
 
 ```zsh
 ├── README.md
+├── .env
+├── docker-compose.yml
+├── docker-compose-dev.yml
 ├── backend
 │   ├── Dockerfile
 │   └── app
@@ -29,7 +38,7 @@ docker-compose down
 │       │   ├── settings.py
 │       │   ├── urls.py
 │       │   └── wsgi.py
-│       ├── db.sqlite3
+│       ├── entrypoint.sh
 │       ├── game
 │       │   ├── __init__.py
 │       │   ├── admin.py
@@ -49,42 +58,42 @@ docker-compose down
 │           ├── tests.py
 │           ├── urls.py
 │           └── views.py
-├── docker-compose.yml
 └── frontend
     ├── Dockerfile
-    ├── components
-    │   ├── body
-    │   │   ├── history.mjs
-    │   │   ├── home.mjs
-    │   │   ├── touramentComponents
-    │   │   │   ├── createTournament.mjs
-    │   │   │   └── setPlayersNames.mjs
-    │   │   └── tournament.mjs
-    │   └── header
-    ├── index.html
-    ├── languages
-    │   ├── en
-    │   │   ├── history.json
-    │   │   ├── home.json
-    │   │   ├── navbar.json
-    │   │   └── tournament.json
-    │   └── fr
-    │       ├── history.json
-    │       ├── home.json
-    │       ├── navbar.json
-    │       └── tournament.json
-    ├── package.json
-    ├── server.js
-    └── static
-        └── js
-            ├── bot.js
-            ├── game.js
-            ├── language.mjs
-            ├── render.mjs
-            ├── router.js
-            ├── routes.mjs
-            ├── theme.mjs
-            └── tournament.js
+    ├── app
+    │   ├── components
+    │   │   ├── body
+    │   │   │   ├── history.mjs
+    │   │   │   ├── home.mjs
+    │   │   │   ├── touramentComponents
+    │   │   │   │   ├── createTournament.mjs
+    │   │   │   │   └── setPlayersNames.mjs
+    │   │   │   └── tournament.mjs
+    │   │   └── header
+    │   ├── index.html
+    │   ├── languages
+    │   │   ├── en
+    │   │   │   ├── history.json
+    │   │   │   ├── home.json
+    │   │   │   ├── navbar.json
+    │   │   │   └── tournament.json
+    │   │   └── fr
+    │   │       ├── history.json
+    │   │       ├── home.json
+    │   │       ├── navbar.json
+    │   │       └── tournament.json
+    │   ├── server.js
+    │   └── static
+    │       └── js
+    │           ├── bot.js
+    │           ├── game.js
+    │           ├── language.mjs
+    │           ├── render.mjs
+    │           ├── router.js
+    │           ├── routes.mjs
+    │           ├── theme.mjs
+    │           └── tournament.js
+    └── package.json
 
 ```
 
