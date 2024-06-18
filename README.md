@@ -7,11 +7,11 @@ git clone git@github.com:0x21x/ft_transcendence.git
 
 ### Run
 
-### @ Development
+### # Development
 ```zsh
 docker-compose --file docker-compose-dev.yml up --build --watch
 ```
-### @ Production
+### # Production
 ```zsh
 docker-compose up --build
 ```
@@ -20,6 +20,17 @@ docker-compose up --build
 ```zsh
 docker-compose down
 ```
+
+## Pong - How to play
+
+Player 1 (left):
+- [W] -> GO UP
+- [S] -> GO DOWN
+
+Player 2 (right):
+- [ARROW UP] -> GO UP
+- [ARROW DOWN] -> GO DOWN
+
 
 ## Project Structure
 
@@ -97,12 +108,38 @@ docker-compose down
 
 ```
 
-## Pong - How to play
+## **Auth API (CRUD)**
+###  # Rooting
+- [POST] -> 0.0.0.0:{API_PORT}/api/auth/ `(CREATE)`
+- [GET] ->  0.0.0.0:{API_PORT}/api/auth/{id} `(READ)`
+- [PUT] -> 0.0.0.0:{API_PORT}/api/auth/{id} `(UPDATE)`
+- [DELETE] -> 0.0.0.0:{API_PORT}/api/auth/{id} `(DELETE)`
 
-Player 1 (left):
-- [W] -> GO UP
-- [S] -> GO DOWN
+###  # Tasks
 
-Player 2 (right):
-- [ARROW UP] -> GO UP
-- [ARROW DOWN] -> GO DOWN
+### - CREATE
+To create a new user, you need to send a POST request to the API with the following JSON format:
+```json
+{
+    "username": "username",
+    "email": "email",
+    "password": "password"
+}
+```
+
+### - READ
+To get a user, you need to send a GET request to the API with the {id} of the user you want to get.
+
+
+### - UPDATE
+To update a user, you need to send a PUT request to the API with the  JSON format: (all fields are optional)
+```json
+{
+    "username": "new_username",
+    "email": "new_email",
+    "password": "new_password"
+}
+```
+
+### - DELETE
+To delete a user, you need to send a DELETE request to the API with the {id} of the user you want to delete.
