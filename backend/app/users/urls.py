@@ -1,14 +1,12 @@
-from django.urls import path, include
-from .views import AuthAPIView
-# from .views import create, read
-
-
-# Routers provide an easy way of automatically determining the URL conf.
+from django.urls import path
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from .views import AuthAPIView, RegisterView, LoginView
 
 urlpatterns = [
-    # path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
     path('', AuthAPIView.as_view()),
     path('<int:id>', AuthAPIView.as_view()),
-    # path('create/', create, name="create"),
-    # path('read/<int:pk>', read, name="read"),
+    path('register/', RegisterView.as_view()),
+    path('login/', LoginView.as_view()),
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 ]

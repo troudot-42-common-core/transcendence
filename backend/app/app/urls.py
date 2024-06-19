@@ -17,7 +17,7 @@ Including another URLconf
 from django.urls import include, path
 from django.shortcuts import HttpResponse
 
-def health_check(request):
+def health_check(request: any) -> HttpResponse:
     return HttpResponse(200)
 
 urlpatterns = [
