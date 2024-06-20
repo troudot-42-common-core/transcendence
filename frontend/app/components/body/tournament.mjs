@@ -9,9 +9,7 @@ export const tournament =  async (render, div) => {
     let tournament = localStorage.getItem('tournament');
     tournament = JSON.parse(tournament) || false;
 
-    if (true) {
-        tournament = new Tournament(tournament);
-        createTournament(render, div, data, tournament);
-    }
+    tournament = new Tournament(tournament);
+    createTournament(render, div, data, tournament);
 
 }
