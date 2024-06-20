@@ -16,12 +16,12 @@ jobs:
 
       # ESLint for JavaScript
       - name: Setup Node.js
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: '12'
+          node-version: '20'
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm install
+        run: npm ci
       - name: Lint with ESLint for JavaScript
         working-directory: ./frontend
         run: npm run lint
