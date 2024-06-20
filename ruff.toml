@@ -1,0 +1,56 @@
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".git-rewrite",
+    ".hg",
+    ".idea",
+    ".ipynb_checkpoints",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pyenv",
+    ".pytest_cache",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    ".vscode",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "site-packages",
+    "venv",
+]
+
+line-length = 120
+indent-width = 4
+
+target-version = "py312"
+
+[lint]
+select = [
+    "ANN",  # Enforce type annotations
+    "TCH",  # Enforce type checking
+    "C",    # Enforce commas
+    "F",    # Enforce format
+    "C901",  # Enforce function length
+]
+ignore = [
+]
+
+fixable = ["ALL"]
+unfixable = []
+
+dummy-variable-rgx = "^(_+|(_+[a-zA-Z0-9_]*[a-zA-Z0-9]+?))$"
+
+[format]
+exclude = ["*.pyi"]
+quote-style = "single"
+indent-style = "space"
+skip-magic-trailing-comma = false
