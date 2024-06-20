@@ -1,14 +1,3 @@
-<<<<<<< Updated upstream
-import { routes } from "./routes.mjs"
-import { themeHandler } from "./theme.mjs"
-import { languageHandler } from "./language.mjs"
-import { renderBody, renderHeader } from "./render.mjs"
-
-const navbar = document.getElementById("navbar");
-const body = document.getElementById("app");
-const theme = document.querySelector("input[name=dark-mode]");
-const language = document.getElementById("languageSwitcher");
-=======
 import { renderBody, renderHeader } from './render.mjs';
 import { languageHandler } from './language.mjs';
 import { routes } from './routes.mjs';
@@ -17,23 +6,18 @@ import { themeHandler } from './theme.mjs';
 const body = document.getElementById('app');
 const theme = document.querySelector('input[name=dark-mode]');
 const language = document.getElementById('languageSwitcher');
->>>>>>> Stashed changes
 
 const router = async () => {
-    const potentialMatches = routes.map(route => {
-        return {
-            route: route,
+    const potentialMatches = routes.map(route => ({
             isMatch: location.pathname === route.path,
-        };
-    });
+            route: route,
+        }));
 
-    const isMatch = (potentialMatch) => {
-        return potentialMatch.isMatch
-    };
-    let match = potentialMatches.find(isMatch);
+    const isMatch = (potentialMatch) => potentialMatch.isMatch;
+    const match = potentialMatches.find(isMatch);
 
-    renderHeader();
-    renderBody(body, match);
+    await renderHeader();
+    await renderBody(body, match);
 };
 
 
@@ -51,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (theme) {
         theme.addEventListener('change', function () {
-            themeHandler(document.body, this)
+            themeHandler(document.body, this);
         });
     } if (language) {
         language.addEventListener('change', function() {

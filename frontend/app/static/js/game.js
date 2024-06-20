@@ -33,14 +33,14 @@ const GAME = {
             shadowPaddle: '#ff5722',
         }
     }
-}
+};
 
 Array.prototype.sample = function(){
   return this[Math.floor(Math.random()*this.length)];
-}
+};
 
 export class Game {
-    constructor(canvasName) {
+    constructor() {
         this.canvas = document.getElementById('pong');
         this.ctx = this.canvas.getContext('2d');
         this.canvas.width = GAME.size.width;
@@ -84,7 +84,7 @@ export class Game {
             };
             const data = JSON.parse(localStorage.getItem('history')) || [];
             if (data.length >= GAME.maxGameSaved ) { data.splice(0, 1); }
-            data.push(game)
+            data.push(game);
             localStorage.setItem('history', JSON.stringify(data));
         }
         this.player = {
@@ -165,9 +165,7 @@ export class Game {
         this.player2.name = name2;
     };
 
-    namesHasSet = () => {
-        return !(this.player.name === undefined || this.player2.name === undefined);
-    }
+    namesHasSet = () => !(this.player.name === undefined || this.player2.name === undefined);
 
     loop = (first=false) => {
         if (first) { this.reset(); }

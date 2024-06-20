@@ -1,5 +1,3 @@
-import { Game } from "./game.js"
-
 export class Tournament {
     constructor(json=false) {
         if (json) {
@@ -33,11 +31,7 @@ export class Tournament {
             for (let i = 0; gamesInRow >= 1; i++) {
                 const games = [];
                 for (let j = 0; j < gamesInRow; j++) {
-<<<<<<< Updated upstream
-                    const game = {"id1": "tim", "score1": undefined, "id2": "tim", "score2": undefined};
-=======
-                    const game = {'id1': 'tim', 'id2': 'tim', 'score1': undefined, 'score2': undefined};
->>>>>>> Stashed changes
+                    const game = {'id1': 'tim', 'score1': undefined, 'id2': 'tim', 'score2': undefined};
                     games.push(game);
                 }
                 this.games.push(games);
@@ -48,16 +42,15 @@ export class Tournament {
     }
 
     loadFromJson(json) {
-        console.log(json);
         this.name = json[0].name || undefined;
         this.nbPlayers = json[0].nbPlayers || undefined;
         this.actualRow = json[0].actualRow || undefined;
-        let players = json[1].players;
-        players.forEach((player) => {console.log(player.name)});
+        // let players = json[1].players;
+        // players.forEach((player) => {});
     }
 
     toJson() {
-        let json = [];
+        const json = [];
         json.push({name: this.name, nbPlayers: this.nbPlayers, actualRow: this.actualRow});
         json.push({players:Array.from(this.players.entries()), games:Array.from(this.games.entries())});
         return json;
