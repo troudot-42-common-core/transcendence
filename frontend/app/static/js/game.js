@@ -1,68 +1,66 @@
 const scale = ((window.innerWidth * 0.7) * 0.75 <= window.innerHeight * 0.5) ? window.innerWidth * 0.7 / 400 : window.innerHeight * 0.5 / 300;
 
 const GAME = {
-    ball: {
-        height: 10 * scale,
-        speed: 1.33 * scale,
-        width: 10 * scale,
-    }, color: {
-        dark: {
-            ball: '#ff5722',
-            bg: '#262c36',
-            middleLine: '#393e46',
-            paddle: '#eeeeee',
-            score: '#393e46',
-            shadowPaddle: '#ff5722',
-        }, light: {
-            ball: '#ff5722',
-            bg: '#eeeeee',
-            middleLine: '#dedede',
-            paddle: '#222831',
-            score: '#dedede',
-            shadowPaddle: '#ff5722',
-        }
-    },
-    maxGameSaved: 10,
     maxScore: 5,
-    paddle: {
-        height: 50 * scale,
-        speed: 2 * scale,
-        width: 10 * scale,
-    },
+    maxGameSaved: 10,
     scale: scale,
     size: {
-        height: 300 * scale,
         width: 400 * scale,
-    },
-};
+        height: 300 * scale,
+    }, ball: {
+        width: 10 * scale,
+        height: 10 * scale,
+        speed: 1.33 * scale,
+    }, paddle: {
+        width: 10 * scale,
+        height: 50 * scale,
+        speed: 2 * scale,
+    }, color: {
+        light: {
+            bg: '#eeeeee',
+            paddle: '#222831',
+            ball: '#ff5722',
+            middleLine: '#dedede',
+            score: '#dedede',
+            shadowPaddle: '#ff5722',
+        }, dark: {
+            bg: '#262c36',
+            paddle: '#eeeeee',
+            ball: '#ff5722',
+            middleLine: '#393e46',
+            score: '#393e46',
+            shadowPaddle: '#ff5722',
+        }
+    }
+}
 
 Array.prototype.sample = function(){
   return this[Math.floor(Math.random()*this.length)];
-};
+}
 
 export class Game {
-    constructor() {
+    constructor(canvasName) {
         this.canvas = document.getElementById('pong');
         this.ctx = this.canvas.getContext('2d');
         this.canvas.width = GAME.size.width;
         this.canvas.height = GAME.size.height;
         this.ball = {
-            vx: [-GAME.ball.speed, GAME.ball.speed].sample(),
-            vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
             x: this.canvas.width / 2,
             y: this.canvas.height / 2,
+            vx: [-GAME.ball.speed, GAME.ball.speed].sample(),
+            vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
         };
         this.player = {
             name: 'Undefined',
-            score: 0,
             x: 0,
             y: this.canvas.height / 2,
+            score: 0,
         };
         this.player2 = {
             name: 'Undefined',
-            score: 0,
             x: this.canvas.width - GAME.paddle.width,
             y: this.canvas.height / 2,
+            score: 0,
         };
         this.ended = true;
         this.handleKeydown = this.handleKeydown.bind(this);
@@ -71,16 +69,16 @@ export class Game {
 
     reset(scoreReset=false) {
         this.ball = {
-            vx: [-GAME.ball.speed, GAME.ball.speed].sample(),
-            vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
             x: this.canvas.width / 2,
             y: this.canvas.height / 2,
+            vx: [-GAME.ball.speed, GAME.ball.speed].sample(),
+            vy: [-GAME.ball.speed, GAME.ball.speed].sample(),
         };
         if (scoreReset) {
             const game = {player1:this.player.name,score1:this.player.score,player2:this.player2.name,score2:this.player2.score};
             const data = JSON.parse(localStorage.getItem('history')) || [];
             if (data.length >= GAME.maxGameSaved ) { data.splice(0, 1); }
-            data.push(game);
+            data.push(game)
             localStorage.setItem('history', JSON.stringify(data));
         }
         this.player = {
@@ -158,7 +156,9 @@ export class Game {
         this.player2.name = name2;
     };
 
-    namesHasSet = () => !(this.player.name === undefined || this.player2.name === undefined);
+    namesHasSet = () => {
+        return !(this.player.name === undefined || this.player2.name === undefined);
+    }
 
     loop = (first=false) => {
         if (first) { this.reset(); }

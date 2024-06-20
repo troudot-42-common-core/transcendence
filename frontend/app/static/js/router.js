@@ -1,23 +1,28 @@
-import { renderBody, renderHeader } from "./render.mjs";
-import { languageHandler } from "./language.mjs";
-import { routes } from "./routes.mjs";
-import { themeHandler } from "./theme.mjs";
+import { routes } from "./routes.mjs"
+import { themeHandler } from "./theme.mjs"
+import { languageHandler } from "./language.mjs"
+import { renderBody, renderHeader } from "./render.mjs"
 
+const navbar = document.getElementById("navbar");
 const body = document.getElementById("app");
 const theme = document.querySelector("input[name=dark-mode]");
 const language = document.getElementById("languageSwitcher");
 
 const router = async () => {
-    const potentialMatches = routes.map(route => ({
-            isMatch: location.pathname === route.path,
+    const potentialMatches = routes.map(route => {
+        return {
             route: route,
-        }));
+            isMatch: location.pathname === route.path,
+        };
+    });
 
-    const isMatch = (potentialMatch) => potentialMatch.isMatch;
-    const match = potentialMatches.find(isMatch);
+    const isMatch = (potentialMatch) => {
+        return potentialMatch.isMatch
+    };
+    let match = potentialMatches.find(isMatch);
 
-    await renderHeader();
-    await renderBody(body, match);
+    renderHeader();
+    renderBody(body, match);
 };
 
 
@@ -35,7 +40,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     if (theme) {
         theme.addEventListener('change', function () {
-            themeHandler(document.body, this);
+            themeHandler(document.body, this)
         });
     } if (language) {
         language.addEventListener('change', function() {

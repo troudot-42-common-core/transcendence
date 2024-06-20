@@ -4,8 +4,7 @@ RUN mkdir -p /node
 WORKDIR /node
 
 ADD package.json /node/package.json
-ADD package-lock.json /node/package-lock.json
-RUN npm ci
+RUN npm install
 
 
 FROM node:22-alpine3.20 as runtime
