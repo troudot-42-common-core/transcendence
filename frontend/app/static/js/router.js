@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import { routes } from "./routes.mjs"
 import { themeHandler } from "./theme.mjs"
 import { languageHandler } from "./language.mjs"
@@ -7,6 +8,16 @@ const navbar = document.getElementById("navbar");
 const body = document.getElementById("app");
 const theme = document.querySelector("input[name=dark-mode]");
 const language = document.getElementById("languageSwitcher");
+=======
+import { renderBody, renderHeader } from './render.mjs';
+import { languageHandler } from './language.mjs';
+import { routes } from './routes.mjs';
+import { themeHandler } from './theme.mjs';
+
+const body = document.getElementById('app');
+const theme = document.querySelector('input[name=dark-mode]');
+const language = document.getElementById('languageSwitcher');
+>>>>>>> Stashed changes
 
 const router = async () => {
     const potentialMatches = routes.map(route => {
@@ -28,13 +39,13 @@ const router = async () => {
 
 window.addEventListener('popstate', router);
 
-document.addEventListener("DOMContentLoaded", () => {
-    document.addEventListener("click", e => {
-        if (e.target.matches("[data-link]")) {
+document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('click', e => {
+        if (e.target.matches('[data-link]')) {
             e.preventDefault();
             if (e.target.href === location.href)
                 return;
-            history.pushState({urlPath: e.target.href}, "", e.target.href);
+            history.pushState({urlPath: e.target.href}, '', e.target.href);
             router();
         }
     });

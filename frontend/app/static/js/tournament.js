@@ -33,7 +33,11 @@ export class Tournament {
             for (let i = 0; gamesInRow >= 1; i++) {
                 const games = [];
                 for (let j = 0; j < gamesInRow; j++) {
+<<<<<<< Updated upstream
                     const game = {"id1": "tim", "score1": undefined, "id2": "tim", "score2": undefined};
+=======
+                    const game = {'id1': 'tim', 'id2': 'tim', 'score1': undefined, 'score2': undefined};
+>>>>>>> Stashed changes
                     games.push(game);
                 }
                 this.games.push(games);
