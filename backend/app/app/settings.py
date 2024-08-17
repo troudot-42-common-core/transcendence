@@ -45,6 +45,15 @@ CORS_ALLOW_HEADERS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", os.environ['REDIS_PORT'])],
+        },
+    },
+}
+
 # Application definition
 
 INSTALLED_APPS = [

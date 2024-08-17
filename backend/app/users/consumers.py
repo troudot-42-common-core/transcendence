@@ -1,17 +1,18 @@
 from channels.generic.websocket import AsyncWebsocketConsumer
 from channels.db import database_sync_to_async
+from game.consumers import is_authenticated
 
 class StatusConsumer(AsyncWebsocketConsumer):
+
+    @is_authenticated
     async def connect(self: AsyncWebsocketConsumer) -> None:
-        if self.scope['user'].is_anonymous:
-            await self.close()
         await self.set_user_status(self.scope['user'], True)
         await self.accept()
 
-    async def disconnect(self: AsyncWebsocketConsumer) -> None:
-        self.scope['user'].is_online = False
+    @is_authenticated
+    async def disconnect(self: AsyncWebsocketConsumer, code: any) -> None:
         await self.set_user_status(self.scope['user'], False)
-        return await super().close()
+        return await self.close()
 
     @database_sync_to_async
     def set_user_status(self: AsyncWebsocketConsumer, user: any, status: bool) -> None:
