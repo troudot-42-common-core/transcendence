@@ -1,8 +1,9 @@
-from typing import Any
+from typing import Any, Optional
 from channels.db import database_sync_to_async
 from users.models.users import Users # noqa: F401
 from .pong import Pong, GAME_STATES, MAX_PLAYERS
-from .models import Game
+from .models import Game, Tournament
+from .views.tournament_handler import check_tournament
 
 ROOM_NAME = 'game'
 
@@ -23,12 +24,17 @@ class MultiplayerPong:
     def __init__(self: Any) -> None:
         self.games = {}
 
+    @database_sync_to_async
     def create_game(self: Any, game_name: str) -> None:
-        self.games[game_name] = Pong()
+        tournament = Tournament.objects.filter(name=game_name).first()
+        if tournament:
+            self.games[game_name] = Pong(tournament.name)
+        else:
+            self.games[game_name] = Pong()
 
-    def add_player(self: Any, game_name: str, player_name: str) -> None:
+    async def add_player(self: Any, game_name: str, player_name: str) -> None:
         if not game_name in self.games:
-            self.create_game(game_name)
+            await self.create_game(game_name)
         if len(self.games[game_name].players) == MAX_PLAYERS or player_name in self.games[game_name].players:
             return
         self.games[game_name].players[player_name] = 'player%d' % (len(self.games[game_name].players) + 1)
@@ -65,7 +71,7 @@ class MultiplayerPong:
         Game.objects.filter(name=game_name).update(status=GAME_STATES[1])
 
     @database_sync_to_async
-    def save_scores(self: Any, game_name: str, delete_after_save: bool = False) -> None:
+    def save_scores(self: Any, game_name: str, delete_after_save: bool = False, loser: Optional[str] = None) -> None:
         if self.games[game_name].game_state != GAME_STATES[2]:
             return
         names = self.get_names(game_name)
@@ -75,22 +81,29 @@ class MultiplayerPong:
         game.status = 'finished'
         for player in names:
             game.scores.create(score=self.games[game_name].__dict__()[self.games[game_name].players[player]]['score'], player=Users.objects.get(username=player))
+        if not loser:
+            game.winner = game.scores.order_by('-score').first().player
+        else:
+            loser_user = Users.objects.get(username=loser)
+            game.winner = game.scores.exclude(player=loser_user).order_by('-score').first().player
         game.save()
         if delete_after_save:
             del self.games[game_name]
+        if game.tournament_name:
+            check_tournament(game.tournament_name)
 
     @database_sync_to_async
     def get_infos(self: Any) -> list:
         games = []
 
-        for game in Game.objects.all().filter(status='waiting'):
+        for game in Game.objects.all().filter(status='waiting', tournament_name__isnull=True):
             if not game.name in self.games:
                 games.append({'name': game.name, 'players': [], 'status': 'waiting'})
             else:
                 games.append({
                         'name': game.name,
                         'players': self.games[game.name].players,
-                        'status': self.games[game.name].game_state
+                        'status': self.games[game.name].game_state,
                     })
         return games
 

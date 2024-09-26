@@ -1,11 +1,16 @@
 import asyncio
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 from channels.db import database_sync_to_async
-from users.models.users import Users # noqa: F401
-from game.multiplayer import MultiplayerPong, GAME_STATES, GameNotFound
-from game.models import Game
-from game.pong import FPS_SERVER
+from ..models import Game, Tournament
+from ..pong import FPS_SERVER
 from .utils import is_authenticated
+from ..multiplayer import MultiplayerPong, GAME_STATES, GameNotFound
+
+class TournamentNotInProgressException(Exception):
+    pass
+
+class PlayerNotInGameException(Exception):
+    pass
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     groups = []
@@ -17,10 +22,10 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
         self.room_group_name = "game_%s" % self.room_name
         try:
             await self.get_game(self.room_name)
-        except GameNotFound:
+        except GameNotFound or TournamentNotInProgressException or PlayerNotInGameException:
             return await self.close()
         self.channel_layer.group_add(self.room_group_name, self.channel_name)
-        self.multiplayer_pong.add_player(self.room_name, self.scope['user'].username)
+        await self.multiplayer_pong.add_player(self.room_name, self.scope['user'].username)
         return await self.accept()
 
     @is_authenticated
@@ -60,8 +65,13 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
 
     @database_sync_to_async
     def get_game(self: AsyncJsonWebsocketConsumer, game_name: str) -> Game:
-        if not Game.objects.filter(name=game_name, status='waiting').first():
+        game = Game.objects.filter(name=game_name, status='waiting').first()
+        if not game:
             raise GameNotFound()
+        if game.tournament_name and not Tournament.objects.filter(name=game.tournament_name, status='in_progress').first():
+            raise TournamentNotInProgressException
+        if game.tournament_name and self.scope['user'] not in game.players.all():
+            raise PlayerNotInGameException
         return Game.objects.filter(name=game_name, status='waiting').first()
 
     @is_authenticated
@@ -70,7 +80,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
             self.get_game(self.room_name)
             if self.multiplayer_pong.get_game_status(self.room_name) == GAME_STATES[1]:
                 self.multiplayer_pong.set_game_status(self.room_name, GAME_STATES[2])
-                await self.multiplayer_pong.save_scores(self.room_name)
+                await self.multiplayer_pong.save_scores(self.room_name, delete_after_save=True, loser=self.scope['user'].username)
                 await self.close_all_connections()
             self.channel_layer.group_discard(self.room_group_name, self.channel_name)
             self.multiplayer_pong.remove_player(self.room_name, self.scope['user'].username)

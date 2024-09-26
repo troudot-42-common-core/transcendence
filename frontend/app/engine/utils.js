@@ -3,6 +3,19 @@ import { navbarRender } from './navbar.js';
 import { renderHeader } from './render.js';
 import { router } from './router.js';
 
+export const truncate = (text, length) => {
+    if (text === undefined)
+        return '';
+    if (text.length <= length)
+        return text;
+    return text.slice(0, length - 2) + '..';
+};
+
+export const popBack = async () => {
+    history.back();
+    return router(await loggedIn());
+};
+
 export const redirect = async (url) => {
     history.pushState(null, null, url);
     return await router(await loggedIn());
