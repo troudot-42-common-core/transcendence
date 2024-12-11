@@ -14,5 +14,9 @@ export const data = {
     'alreadyFriends': 'You\'re already friends',
     'gameAlreadyExists': 'Game already exists',
     'tournamentNotFound': 'Tournament not found',
-    'tournamentIsAlreadyFull': 'Tournament is already full'
+    'tournamentIsAlreadyFull': 'Tournament is already full',
+    'invalidOTP': 'Invalid OTP',
+    'pleaseEnterYourOTP': 'Please enter your OTP',
+    'invalidPassword': 'Invalid password',
+    'otpRemoved': 'OTP Successfully removed',
 };

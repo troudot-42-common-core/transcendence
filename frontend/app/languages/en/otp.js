@@ -4,5 +4,5 @@ export const data = {
   'login': 'Login',
   'removeOTP': 'Remove OTP',
   'password': 'Password',
-  'optQrCode': 'OTP QR Code'
+  'optQrCode': 'OTP QR Code',
 };

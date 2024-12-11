@@ -2,7 +2,7 @@ from django.urls import path
 from .views.user import UsernameView, PasswordView, AvatarView, GetUserInfoView
 from .views.auth import RegisterView, LoginView, LogoutView, MyTokenRefreshView, VerifyView
 from .views.otp import RegisterOTPView, LogoutOTPView
-from .views.oauth import OAuthLoginView, OAuthRegisterView
+from .views.oauth import OAuthCallbackView
 from .views.friendships import FriendshipsView
 from game.views import (
     GamesHistoryView,
@@ -22,8 +22,7 @@ urlpatterns = [
     path('auth/logout/', LogoutView.as_view()),
 
     # Oauth (inherit from classic auth)
-    path('oauth/login/', OAuthLoginView.as_view()),
-    path('oauth/register/', OAuthRegisterView.as_view()),
+    path('oauth/callback/', OAuthCallbackView.as_view()),
 
     # OTP
     path('otp/register/', RegisterOTPView.as_view()),

@@ -1,3 +1,4 @@
+import { error} from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
 
 const loginOTPRequest = async (otp, username, password) => {
@@ -14,7 +15,21 @@ const loginOTPRequest = async (otp, username, password) => {
     return response.status === 200;
 };
 
-export const loginOTP = (render, div, username, password) => {
+const loginOTPOauthRequest = async (otp, username, password) => {
+    if (!otp)
+        return false;
+    const response = await fetch('/api/oauth/callback/', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({otp, username, password, 'second_request': true}),
+    });
+    return response.status === 200;
+};
+
+export const loginOTP = (render, div, username, password, oauth = false) => {
     const language = localStorage.getItem('language') || 'en';
     const data = getLanguageDict(language, 'otp');
 
@@ -38,8 +53,13 @@ export const loginOTP = (render, div, username, password) => {
     const toOAuthLoginButton = document.getElementById('toOAuthLoginButton');
     toOAuthLoginButton.addEventListener('click', async () => {
         const otp = document.getElementById('otpValue').value;
-        if (!await loginOTPRequest(otp, username, password, render, div))
+        if (!oauth && !await loginOTPRequest(otp, username, password, render, div)) {
             return await loginOTP(render, div, username, password);
+        }
+        if (oauth && !await loginOTPOauthRequest(otp, username, password, render, div)) {
+            error('Invalid OTP', 'warning');
+            return await loginOTP(render, div, username, password, true);
+        }
         window.location.href = '/';
     });
 };

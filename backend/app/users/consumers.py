@@ -8,7 +8,7 @@ class StatusConsumer(AsyncWebsocketConsumer):
     @is_authenticated
     async def connect(self: AsyncWebsocketConsumer) -> None:
         await self.set_user_status(self.scope['user'], True)
-        await self.accept()
+        return await self.accept()
 
     @is_authenticated
     async def disconnect(self: AsyncWebsocketConsumer, code: any) -> None:

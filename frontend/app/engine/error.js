@@ -19,7 +19,11 @@ const errorDict = [
     {'name': 'Avatar too big', 'en': en.avatarTooBig, 'fr': fr.avatarTooBig, 'es': es.avatarTooBig},
     {'name': 'Username already exists', 'en': en.usernameAlreadyExists, 'fr': fr.usernameAlreadyExists, 'es': es.usernameAlreadyExists},
     {'name': 'Tournament not found', 'en': en.tournamentNotFound, 'fr': fr.tournamentNotFound, 'es': es.tournamentNotFound},
-    {'name': 'Tournament is already full', 'en': en.tournamentIsAlreadyFull, 'fr': fr.tournamentIsAlreadyFull, 'es': es.tournamentIsAlreadyFull}
+    {'name': 'Tournament is already full', 'en': en.tournamentIsAlreadyFull, 'fr': fr.tournamentIsAlreadyFull, 'es': es.tournamentIsAlreadyFull},
+    {'name': 'Invalid OTP', 'en': en.invalidOTP, 'fr': fr.invalidOTP, 'es': es.invalidOTP},
+    {'name': 'Please enter your OTP', 'en': en.pleaseEnterYourOTP, 'fr': fr.pleaseEnterYourOTP, 'es': es.pleaseEnterYourOTP},
+    {'name': 'Invalid password', 'en': en.invalidPassword, 'fr': fr.invalidPassword, 'es': es.invalidPassword},
+    {'name': 'OTP removed', 'en': en.otpRemoved, 'fr': fr.otpRemoved, 'es': es.otpRemoved}
 ];
 
 export const addErrorContainer = (div) => {

@@ -4,5 +4,5 @@ export const data = {
   'login': 'Iniciar sesión',
   'removeOTP': 'Quitar OTP',
   'password': 'Contraseña',
-  'optQrCode': 'Código OTP QR'
+  'optQrCode': 'Código OTP QR',
 };

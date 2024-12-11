@@ -11,6 +11,7 @@ class Users(AbstractBaseUser):
     self_hosted_avatar = models.BooleanField(default=True)
     otp_enabled = models.BooleanField(default=False)
     otp_secret = models.CharField(null=True, blank=True)
+    oauth_connected = models.BooleanField(default=False)
 
     USERNAME_FIELD = "username"
     REQUIRED_FIELDS = ["password"]

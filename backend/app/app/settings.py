@@ -12,6 +12,12 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 import os
 from pathlib import Path
 
+# Utiliser les variables d'environnement
+# API42_UID = os.environ.get('API42_UID')
+# API42_SECRET = os.environ.get('API42_SECRET')
+# API42_REDIRECT_URI = os.environ.get('API42_REDIRECT_URI')
+# API42_BASE_URL = os.environ.get('API42_BASE_URL')
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -24,7 +30,13 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# OAuth Settings
+CLIENT_ID = os.environ['CLIENT_ID']
+CLIENT_SECRET = os.environ['CLIENT_SECRET']
+REDIRECT_URI = os.environ['REDIRECT_URI']
+
 ALLOWED_HOSTS = ['*']
+
 # ahead add also the address IP of the machine else the server will not be able to connect for other network devices
 
 CORS_ALLOWED_ORIGINS = [
