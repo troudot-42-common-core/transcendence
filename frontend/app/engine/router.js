@@ -45,6 +45,9 @@ export const router = async (logged) => {
     const languageFunc = async () => {
         languageHandler(language);
         language.removeEventListener('change', languageFunc);
+        if (window.location.pathname === routes.find(route => route.name === 'games').path){
+            websocketsHandler.closeWs('games');
+        }
         return await router(logged);
     };
     if (theme) {
