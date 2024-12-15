@@ -117,6 +117,9 @@ class MultiplayerPong:
             del self.games[game_name]
         if game.tournament_name:
             check_tournament(game.tournament_name)
+            
+    def is_a_game_in_progress(self: Any) -> bool:
+        return any(self.games[game].game_state == GAME_STATES[1] or len(self.games[game].players) == 2 for game in self.games)
 
     @database_sync_to_async
     def get_infos(self: Any) -> list:

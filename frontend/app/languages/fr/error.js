@@ -19,4 +19,7 @@ export const data = {
     'pleaseEnterYourOTP': 'Veuillez entrer votre OTP',
     'invalidPassword': 'Mot de passe invalide',
     'otpRemoved': 'L\'OTP a été desactivé',
+    'networkError': 'Erreur réseau',
+    'pleaseWaitTheEndOfTheOtherGame': 'Veuillez attendre la fin de l\'autre partie',
+    'tooManyGamesCreated': 'Trop de parties créées',
 };

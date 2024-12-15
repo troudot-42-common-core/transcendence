@@ -14,7 +14,6 @@ class TournamentNotInProgressException(Exception):
 class PlayerNotInGameException(Exception):
     pass
 
-
 class GameConsumer(AsyncJsonWebsocketConsumer):
     groups = []
     multiplayer_pong = MultiplayerPong()
@@ -23,6 +22,8 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self: AsyncJsonWebsocketConsumer) -> None:
         self.room_name = self.scope["url_route"]["kwargs"]["room_name"]
         self.room_group_name = "game_%s" % self.room_name
+        if self.multiplayer_pong.is_a_game_in_progress():
+            return await self.close()
         try:
             await self.get_game(self.room_name)
             await self.multiplayer_pong.add_player(self.room_name, self.scope['user'].username)
@@ -121,3 +122,7 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
     def add_room_to_groups(cls: type, room_group_name: str) -> None:
         if not room_group_name in cls.groups:
             cls.groups.append(room_group_name)
+
+    @classmethod
+    def is_a_game_in_progress(cls: type) -> bool:
+        return cls.multiplayer_pong.is_a_game_in_progress()

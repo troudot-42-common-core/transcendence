@@ -19,4 +19,7 @@ export const data = {
     'pleaseEnterYourOTP': 'Please enter your OTP',
     'invalidPassword': 'Invalid password',
     'otpRemoved': 'OTP Successfully removed',
+    'networkError': 'Network error',
+    'pleaseWaitTheEndOfTheOtherGame': 'Please wait the end of the other game',
+    'tooManyGamesCreated': 'Too many games created',
 };

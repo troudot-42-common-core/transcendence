@@ -21,7 +21,15 @@ class GamesHandlerView(APIView):
         return Response({'waiting_games': json_data}, status=status.HTTP_200_OK)
 
     def post(self: APIView, request: Any) -> Response:  # noqa: ANN401
+        games = Game.objects.filter(status='waiting')
+        if games.count() >= 5 :
+            return Response(status=status.HTTP_423_LOCKED)
         name = str(uuid.uuid4())[0:18]
         Game.objects.create(name=name, status='waiting')
         GameConsumer.add_room_to_groups('game_%s' % name)
         return Response({'message': 'Game created.'}, status=status.HTTP_201_CREATED)
+
+    def head(self: APIView, request: Any) -> Response: # noqa: ANN401
+        if GameConsumer.is_a_game_in_progress():
+            return Response({'message': 'A game is already in progress.'}, status=status.HTTP_400_BAD_REQUEST)
+        return Response(status=status.HTTP_200_OK)

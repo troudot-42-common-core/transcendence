@@ -23,7 +23,10 @@ const errorDict = [
     {'name': 'Invalid OTP', 'en': en.invalidOTP, 'fr': fr.invalidOTP, 'es': es.invalidOTP},
     {'name': 'Please enter your OTP', 'en': en.pleaseEnterYourOTP, 'fr': fr.pleaseEnterYourOTP, 'es': es.pleaseEnterYourOTP},
     {'name': 'Invalid password', 'en': en.invalidPassword, 'fr': fr.invalidPassword, 'es': es.invalidPassword},
-    {'name': 'OTP removed', 'en': en.otpRemoved, 'fr': fr.otpRemoved, 'es': es.otpRemoved}
+    {'name': 'OTP removed', 'en': en.otpRemoved, 'fr': fr.otpRemoved, 'es': es.otpRemoved},
+    {'name': 'Network error', 'en': en.networkError, 'fr': fr.networkError, 'es': es.networkError},
+    {'name': 'Please wait the end of the other game', 'en': en.pleaseWaitTheEndOfTheOtherGame, 'fr': fr.pleaseWaitTheEndOfTheOtherGame, 'es': es.pleaseWaitTheEndOfTheOtherGame},
+    {'name': 'Too many games created', 'en': en.tooManyGamesCreated, 'fr': fr.tooManyGamesCreated, 'es': es.tooManyGamesCreated},
 ];
 
 export const addErrorContainer = (div) => {
