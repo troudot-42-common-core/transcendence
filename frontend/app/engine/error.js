@@ -69,6 +69,9 @@ export const error = (errorString, errorType, icon='') => {
     if (!errorTypes.some((type) => type.name === errorType)) {
         return;
     }
+    if (errorContainer.children.length > 3) {
+        return ;
+    }
 
     let errorIcon = '';
     if (icon !== '' && errorTypes.some((type) => type.icon === icon)) {
@@ -77,10 +80,6 @@ export const error = (errorString, errorType, icon='') => {
         errorIcon = errorTypes.find((type) => type.name === errorType).icon;
     }
 
-    if (errorContainer.children.length >= 3) {
-        clearTimeout(errorContainer.children[0].timeout);
-        errorContainer.removeChild(errorContainer.children[0]);
-    }
 
     const error = document.createElement('div');
     error.classList.add('alert', 'alert-' + errorType);
