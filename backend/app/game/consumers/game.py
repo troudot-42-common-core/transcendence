@@ -6,11 +6,14 @@ from ..pong import FPS_SERVER
 from .utils import is_authenticated
 from ..multiplayer import MultiplayerPong, GAME_STATES, GameNotFoundException, GameFullException
 
+
 class TournamentNotInProgressException(Exception):
     pass
 
+
 class PlayerNotInGameException(Exception):
     pass
+
 
 class GameConsumer(AsyncJsonWebsocketConsumer):
     groups = []
@@ -64,6 +67,9 @@ class GameConsumer(AsyncJsonWebsocketConsumer):
                 await asyncio.sleep(FPS_SERVER)
         except GameNotFoundException:
             return await self.close_all_connections()
+
+    async def game_finished(self: AsyncJsonWebsocketConsumer, event: dict) -> None:
+        await self.send_json(event)
 
     async def game_state(self: AsyncJsonWebsocketConsumer, event: dict) -> None:
         await self.send_json(event)

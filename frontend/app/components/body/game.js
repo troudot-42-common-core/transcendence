@@ -220,6 +220,9 @@ export const game = async (render, div) => {
             startGameContainer.style.display = 'none';
             gameContainer.style.display = 'block';
             renderPong(ctx, canvas, game_data.pong.player1, game_data.pong.player2, game_data.pong.ball);
+        } else if (game_data.game_finished) {
+            websocketsHandler.closeWs('game');
+            window.location.href = '/games/';
         }
     };
     websocketsHandler.handleWebSocketOpen(websocket, (websocket) => {

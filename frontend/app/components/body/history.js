@@ -8,14 +8,20 @@ const fillTableWithHistory = (table, history) => {
         const tdPlayer2 = document.createElement('td');
         const tdScore1 = document.createElement('td');
         const tdScore2 = document.createElement('td');
+        const tdBlockchainHash = document.createElement('td');
         tdPlayer1.innerHTML = `<a href="/user/${history[i]['player1']}" data-link>${history[i]['player1']}</a>`;
         tdPlayer2.innerHTML = `<a href="/user/${history[i]['player2']}" data-link>${history[i]['player2']}</a>`;
         tdScore1.innerHTML = history[i]['score1'];
         tdScore2.innerHTML = history[i]['score2'];
+        if (history[i]['blockchain_hash'] === null)
+            tdBlockchainHash.innerHTML = '-';
+        else
+            tdBlockchainHash.innerHTML = `<a href="https://sepolia.etherscan.io/tx/${history[i]['blockchain_hash']}">Etherscan</a>`;
         tr.appendChild(tdPlayer1);
         tr.appendChild(tdScore1);
         tr.appendChild(tdPlayer2);
         tr.appendChild(tdScore2);
+        tr.appendChild(tdBlockchainHash);
 	    table.appendChild(tr);
     }
 };
@@ -40,6 +46,7 @@ export const getHistory = async (table, username='') => {
             'Content-Type': 'application/json',
         }
     });
+
     if (response.status !== 200)
         return ;
     const history = await response.json();
@@ -79,6 +86,7 @@ export const history =  async (render, div) => {
                             <th scope="col">${data.score}</th>
                             <th scope="col">${data.secondPlayer}</th>
                             <th scope="col">${data.score}</th>
+                            <th scope="col">${data.blockchainHash}</th>
                         </tr>
                    </thead>
                    <tbody id="table"></tbody>

@@ -7,7 +7,7 @@ export const data = {
   'game': 'Juego',
   'watch': 'Vigilar',
   'player1': 'Jugador 1',
-  'player2':  'Player 2',
+  'player2':  'Judagor 2',
   'status': 'Estado',
   'inGame': 'In juego',
   'waitingPlayers': 'Esperando jugadores',

@@ -13,10 +13,17 @@ import os
 from pathlib import Path
 
 # Utiliser les variables d'environnement
-# API42_UID = os.environ.get('API42_UID')
-# API42_SECRET = os.environ.get('API42_SECRET')
-# API42_REDIRECT_URI = os.environ.get('API42_REDIRECT_URI')
-# API42_BASE_URL = os.environ.get('API42_BASE_URL')
+API42_UID = os.environ.get('API42_UID')
+API42_SECRET = os.environ.get('API42_SECRET')
+API42_REDIRECT_URI = os.environ.get('API42_REDIRECT_URI')
+API42_BASE_URL = os.environ.get('API42_BASE_URL')
+
+
+# BlockChain
+BLOCKCHAIN_PUBLIC_KEY=os.environ.get('BLOCKCHAIN_PUBLIC_KEY')
+BLOCKCHAIN_PRIVATE_KEY=os.environ.get('BLOCKCHAIN_PRIVATE_KEY')
+BLOCKCHAIN_INFURA_API_KEY=os.environ.get('BLOCKCHAIN_INFURA_API_KEY')
+BLOCKCHAIN_CONTRACT_ADDRESS=os.environ.get('BLOCKCHAIN_CONTRACT_ADDRESS')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -77,6 +84,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'users.apps.UsersConfig',
     'game.apps.GameConfig',
+    'blockchain.apps.BlockchainAppConfig',
 ]
 
 AUTH_USER_MODEL = "users.Users"

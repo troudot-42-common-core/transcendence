@@ -15,8 +15,10 @@ from django.contrib.auth.hashers import make_password
 token_url = "https://api.intra.42.fr/v2/oauth/token"
 user_info_url = "https://api.intra.42.fr/v2/me"
 
+
 class UserNameAlreadyExists(Exception):
     pass
+
 
 class OAuthCallbackView(APIView):
     permission_classes = []

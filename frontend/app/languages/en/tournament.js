@@ -20,6 +20,7 @@ export const data = {
   'waiting': 'Waiting',
   'in_progress': 'In progress',
   'finished': 'Finished',
+  'saving': 'Saving to blockchain',
   'play': 'Play',
   'stage': 'Stage',
   'score': 'Score',

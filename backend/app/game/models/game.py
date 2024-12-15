@@ -11,6 +11,7 @@ class Game(models.Model):
     winner = models.ForeignKey(Users, on_delete=models.CASCADE, related_name='wins', blank=True, null=True)
     scores = models.ManyToManyField(Score, related_name='games', blank=True)
     tournament_name = models.CharField(max_length=255, blank=True, null=True)
+    blockchain_hash = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self: models.Model) -> models.CharField:
         return self.name

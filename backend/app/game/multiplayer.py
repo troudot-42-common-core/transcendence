@@ -1,9 +1,14 @@
+import asyncio
 from typing import Any, Optional
 from channels.db import database_sync_to_async
 from users.models.users import Users # noqa: F401
 from .pong import Pong, GAME_STATES, MAX_PLAYERS
 from .models import Game, Tournament
 from .views.tournament_handler import check_tournament
+from blockchain.utils import get_blockchain_handler
+import logging
+
+logger = logging.getLogger(__name__)
 
 ROOM_NAME = 'game'
 
@@ -25,9 +30,15 @@ class GameFullException(Exception):
 
 class MultiplayerPong:
     games = {}
+    _blockchain_handler = None
 
     def __init__(self: Any) -> None:
-        pass
+        if MultiplayerPong._blockchain_handler is None:
+            try:
+                MultiplayerPong._blockchain_handler = get_blockchain_handler()
+                logger.info("[BLOCKCHAIN] Blockchain handler initialized in MultiplayerPong")
+            except Exception as e:
+                logger.error(f"[BLOCKCHAIN] Failed to initialize blockchain handler: {e}")
 
     @database_sync_to_async
     def create_game(self: Any, game_name: str) -> None:
@@ -83,7 +94,7 @@ class MultiplayerPong:
         game = Game.objects.get(name=game_name)
         if not game:
             return
-        game.status = 'finished'
+        game.status = 'saving'
         for player in names:
             game.scores.create(score=self.games[game_name].__dict__()[self.games[game_name].players[player]]['score'], player=Users.objects.get(username=player))
         if not loser:
@@ -92,6 +103,16 @@ class MultiplayerPong:
             loser_user = Users.objects.get(username=loser)
             game.winner = game.scores.exclude(player=loser_user).order_by('-score').first().player
         game.save()
+
+
+        if MultiplayerPong._blockchain_handler:
+            try:
+                asyncio.run(
+                    MultiplayerPong._blockchain_handler.add_match_to_queue(game.name)
+                )
+            except Exception as e:
+                logger.error(f"[BLOCKCHAIN] Failed to add match to queue: {e}")
+
         if delete_after_save:
             del self.games[game_name]
         if game.tournament_name:
@@ -148,3 +169,4 @@ class MultiplayerPong:
     @classmethod
     def get_players_by_status(cls: type, status: str) -> list:
         return [cls.games[game].players for game in cls.games if cls.games[game].game_state == status]
+    

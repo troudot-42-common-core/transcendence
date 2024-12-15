@@ -20,6 +20,7 @@ export const data ={
   'waiting': 'En attente',
   'inProgress': 'En cours',
   'finished': 'Finis',
+  'saving': 'Sauvegarde sur la blockchain',
   'join': 'Rejoindre',
   'play': 'Jouer',
   'stage': 'Étape',

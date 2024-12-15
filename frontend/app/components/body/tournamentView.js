@@ -74,7 +74,7 @@ const renderRow = (tournament, rowId, div, data, username) => {
         gameCard.appendChild(players);
 
         // Players' scores
-        if (game.status === 'finished' && game.winner !== null) {
+        if ((game.status === 'finished' || game.status === 'saving') && game.winner !== null) {
             const scores = document.createElement('div');
             scores.classList.add('row', 'w-100', 'text-center');
             scores.style = 'padding: 5px;';
