@@ -1,13 +1,13 @@
+import { loggedFetch, reload } from '../../engine/utils.js';
 import { error } from '../../engine/error.js';
 import { getLanguageDict } from '../../engine/language.js';
 import { getUserInfo } from './user.js';
 import { getUsername } from './profile.js';
-import { reload } from '../../engine/utils.js';
 
 export const getAllFriendRequests = async (status=null) => {
     let response;
     if (status) {
-        response = await fetch(`/api/friendships/${status}/`, {
+        response = await loggedFetch(fetch)(`/api/friendships/${status}/`, {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -16,7 +16,7 @@ export const getAllFriendRequests = async (status=null) => {
         });
     }
     else {
-        response = await fetch('/api/friendships/', {
+        response = await loggedFetch(fetch)('/api/friendships/', {
             method: 'GET',
             credentials: 'include',
             headers: {
@@ -40,7 +40,7 @@ const refreshFriendIcons = async () => {
 };
 
 const addFriend = async (username) => {
-    const response = await fetch('/api/friendships/', {
+    const response = await loggedFetch(fetch)('/api/friendships/', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -69,7 +69,7 @@ const addFriend = async (username) => {
 };
 
 const patchFriendship = async (username, action) => {
-    await fetch('/api/friendships/', {
+    await loggedFetch(fetch)(`/api/friendships/${username}/`, {
         method: 'PATCH',
         credentials: 'include',
         headers: {

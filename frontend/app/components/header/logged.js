@@ -1,7 +1,8 @@
 import { getAllFriendRequests } from '../body/friends.js';
+import { loggedFetch } from '../../engine/utils.js';
 
 const getAvatarUrl = async () => {
-    let avatar = await fetch('/api/avatars/', {
+    let avatar = await loggedFetch(fetch)('/api/avatars/', {
         method: 'GET',
         credentials: 'include',
         headers: {

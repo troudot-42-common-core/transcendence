@@ -1,8 +1,9 @@
 import { error } from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
+import { loggedFetch } from '../../../engine/utils.js';
 
 const registerOTPRequest = async (password) => {
-    const response = await fetch('/api/otp/register/', {
+    const response = await loggedFetch(fetch)('/api/otp/register/', {
         method: 'POST',
         credentials: 'include',
         headers: {

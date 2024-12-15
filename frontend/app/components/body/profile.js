@@ -1,6 +1,7 @@
 import { error } from '../../engine/error.js';
 import { getLanguageDict } from '../../engine/language.js';
 import { getUserInfo } from './user.js';
+import { loggedFetch } from '../../engine/utils.js';
 import { logoutOTP } from './otp/logoutOTP.js';
 import { registerOTP } from './otp/registerOTP.js';
 
@@ -9,7 +10,7 @@ const uploadAvatar = async (avatar) => {
         return false;
     const formData = new FormData();
     formData.append('avatar', avatar);
-    const response = await fetch('/api/avatars/', {
+    const response = await loggedFetch(fetch)('/api/avatars/', {
         method: 'PUT',
         credentials: 'include',
         body: formData,
@@ -35,7 +36,7 @@ const uploadAvatar = async (avatar) => {
 };
 
 const setUsername = async (username) => {
-    const response = await fetch('/api/usernames/', {
+    const response = await loggedFetch(fetch)('/api/usernames/', {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -64,7 +65,7 @@ const setUsername = async (username) => {
 };
 
 const setPassword = async (oldPass, newPass) => {
-    const response = await fetch('/api/passwords/', {
+    const response = await loggedFetch(fetch)('/api/passwords/', {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -93,7 +94,7 @@ const setPassword = async (oldPass, newPass) => {
 };
 
 export const getUsername = async () => {
-    let username = await fetch('/api/usernames/', {
+    let username = await loggedFetch(fetch)('/api/usernames/', {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -105,7 +106,7 @@ export const getUsername = async () => {
 };
 
 const logout = async () => {
-    const response = await fetch('/api/auth/logout/', {
+    const response = await loggedFetch(fetch)('/api/auth/logout/', {
         method: 'POST',
         credentials: 'include',
         headers: {

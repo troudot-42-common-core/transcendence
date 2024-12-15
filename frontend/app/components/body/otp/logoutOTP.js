@@ -1,11 +1,12 @@
 import { error } from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
+import { loggedFetch } from '../../../engine/utils.js';
 import { registerOTP } from './registerOTP.js';
 
 const logoutOTPRequest = async (otp) => {
     if (!otp)
         return false;
-    const response = await fetch('/api/otp/logout/', {
+    const response = await loggedFetch(fetch)('/api/otp/logout/', {
         method: 'POST',
         credentials: 'include',
         headers: {

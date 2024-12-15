@@ -1,5 +1,6 @@
 import { error } from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
+import { loggedFetch } from '../../../engine/utils.js';
 import { loginRequest } from './login.js';
 import { redirectToIntraApi } from './oauth.js';
 
@@ -11,7 +12,7 @@ const registerRequest = async (username, password, render, div) => {
         username: username,
         password: password
     };
-    const response = await fetch('/api/auth/register/', {
+    const response = await loggedFetch(fetch)('/api/auth/register/', {
         method: 'POST',
         body: JSON.stringify(user),
         headers: {'Content-Type': 'application/json',}

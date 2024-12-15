@@ -2,6 +2,7 @@ import { loggedIn } from './tokens.js';
 import { navbarRender } from './navbar.js';
 import { renderHeader } from './render.js';
 import { router } from './router.js';
+import { routes } from './routes.js';
 
 export const getCookie = (name) => {
     const cookieArr = document.cookie.split(';');
@@ -112,4 +113,13 @@ export const replaceWildcard = (path, args) => {
             routeFolders[i] = args.shift();
     }
     return routeFolders.join('/') + '/';
+};
+
+export const loggedFetch = (fetchFunction) => async (...args) => {
+    const shouldBeLogged = routes.find(route => isAMatch(window.location.pathname, route.path)).authorization === 2;
+    if (shouldBeLogged && !await loggedIn()) {
+        await navbarRender(false);
+        return await router(false);
+    }
+    return await fetchFunction(...args);
 };

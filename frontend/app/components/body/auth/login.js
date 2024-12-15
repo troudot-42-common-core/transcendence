@@ -1,17 +1,19 @@
+import { loggedFetch, redirect } from '../../../engine/utils.js';
 import { error } from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
 import { loginOTP } from '../otp/loginOTP.js';
-import { redirect } from '../../../engine/utils.js';
 import { redirectToIntraApi } from './oauth.js';
 
 export const loginRequest = async (username, password, render, div) => {
     if (!username || !password) {
         return;
     }
-    const response = await fetch('/api/auth/login/', {
+    const response = await loggedFetch(fetch)('/api/auth/login/', {
         method: 'POST',
         credentials: 'include',
-        headers: {'Content-Type': 'application/json',},
+        headers: {
+            'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
             username: username,
             password: password

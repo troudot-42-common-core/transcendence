@@ -1,6 +1,6 @@
+import { loggedFetch, reload } from '../../engine/utils.js';
 import { error } from '../../engine/error.js';
 import { getLanguageDict } from '../../engine/language.js';
-import { reload } from '../../engine/utils.js';
 import { websocketsHandler } from '../../engine/router.js';
 
 export const fillTableWithGames = (table, games, data) => {
@@ -26,7 +26,7 @@ export const fillTableWithGames = (table, games, data) => {
 // New function to validate game fetch before navigation
 const validateGameFetch = async () => {
     try {
-        const response = await fetch('/api/games/', {
+        const response = await loggedFetch(fetch)('/api/games/', {
             method: 'HEAD',
             headers: {
                 'Content-Type': 'application/json'
@@ -104,7 +104,7 @@ export const gameHandler = (render, div) => {
         }
     });
     createGameButton.addEventListener('click', async () => {
-        const response = await fetch('/api/games/', {
+        const response = await loggedFetch(fetch)('/api/games/', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

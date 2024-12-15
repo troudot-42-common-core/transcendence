@@ -1,4 +1,4 @@
-import { getCookie } from '../../../engine/utils.js';
+import { getCookie, loggedFetch } from '../../../engine/utils.js';
 import { getLanguageDict } from '../../../engine/language.js';
 import { loginOTP} from '../otp/loginOTP.js';
 
@@ -7,14 +7,14 @@ export const redirectToIntraApi = () => {
         window.location.href = getCookie('api_42');
 };
 
-const oauthRequest = async (code) => await fetch('/api/oauth/callback/', {
-        method: 'POST',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({'code': code}),
-    });
+const oauthRequest = async (code) => await loggedFetch(fetch)('/api/oauth/callback/', {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+    body: JSON.stringify({'code': code}),
+});
 
 export const oauth = async (render, div, args) => {
     const language = localStorage.getItem('language') || 'en';

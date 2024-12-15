@@ -1,9 +1,9 @@
+import { loggedFetch, redirect } from '../../engine/utils.js';
 import { getLanguageDict } from '../../engine/language.js';
-import { redirect } from '../../engine/utils.js';
 
 const getAllTournaments = async (status=null) => {
     const url = status ? `/api/tournaments/${status}/` : '/api/tournaments/';
-    const response = await fetch(url, {
+    const response = await loggedFetch(fetch)(url, {
         method: 'GET',
         credentials: 'include',
         headers: {

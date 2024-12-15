@@ -1,4 +1,4 @@
-import { redirect, reload } from '../../engine/utils.js';
+import { loggedFetch, redirect, reload } from '../../engine/utils.js';
 import { error } from '../../engine/error.js';
 import { getLanguageDict } from '../../engine/language.js';
 
@@ -56,7 +56,7 @@ export const createTournament = (render, div) => {
 
     createTournamentButton.addEventListener('click', async () => {
         if (form.tournamentPlayers.value && form.tournamentName.value) {
-            const response = await fetch('/api/tournaments/', {
+            const response = await loggedFetch(fetch)('/api/tournaments/', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {

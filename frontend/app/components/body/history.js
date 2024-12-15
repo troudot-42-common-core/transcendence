@@ -1,4 +1,5 @@
 import { getLanguageDict } from '../../engine/language.js';
+import { loggedFetch } from '../../engine/utils.js';
 
 
 const fillTableWithHistory = (table, history) => {
@@ -39,7 +40,7 @@ const calculateWinRate = (history, username) => {
 };
 
 export const getHistory = async (table, username='') => {
-    const response = await fetch(`/api/games/history/${username}`, {
+    const response = await loggedFetch(fetch)(`/api/games/history/${username}`, {
         method: 'GET',
         credentials: 'include',
         headers: {

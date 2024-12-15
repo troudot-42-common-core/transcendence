@@ -1,13 +1,13 @@
+import { loggedFetch, reload } from '../../engine/utils.js';
 import { error } from '../../engine/error.js';
 import { error as errorHandler } from './error.js';
 import { getHistory } from './history.js';
 import { getLanguageDict } from '../../engine/language.js';
-import { reload } from '../../engine/utils.js';
 
 export const getUserInfo = async (args) => {
     if (args.length !== 1)
         throw new Error('Invalid number of arguments');
-    const response = await fetch(`/api/users/${args[0]}/`, {
+    const response = await loggedFetch(fetch)(`/api/users/${args[0]}/`, {
         method: 'GET',
         credentials: 'include',
         headers: {
@@ -116,7 +116,7 @@ export const user = async (render, div, args) => {
     }
     requestFriendButton.addEventListener('click', async () => {
         if (requestFriendButton.classList.contains('invite')) {
-            const response = await fetch('/api/friendships/', {
+            const response = await loggedFetch(fetch)('/api/friendships/', {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -138,7 +138,7 @@ export const user = async (render, div, args) => {
                 }
             }
         } else if (requestFriendButton.classList.contains('decline')) {
-            const response = await fetch('/api/friendships/', {
+            const response = await loggedFetch(fetch)('/api/friendships/', {
                 method: 'PATCH',
                 credentials: 'include',
                 headers: {

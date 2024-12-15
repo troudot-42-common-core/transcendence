@@ -1,10 +1,11 @@
 import { error} from '../../../engine/error.js';
 import { getLanguageDict } from '../../../engine/language.js';
+import { loggedFetch } from '../../../engine/utils.js';
 
 const loginOTPRequest = async (otp, username, password) => {
     if (!otp)
         return false;
-    const response = await fetch('/api/auth/login/', {
+    const response = await loggedFetch(fetch)('/api/auth/login/', {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -18,7 +19,7 @@ const loginOTPRequest = async (otp, username, password) => {
 const loginOTPOauthRequest = async (otp, username, password) => {
     if (!otp)
         return false;
-    const response = await fetch('/api/oauth/callback/', {
+    const response = await loggedFetch(fetch)('/api/oauth/callback/', {
         method: 'POST',
         credentials: 'include',
         headers: {

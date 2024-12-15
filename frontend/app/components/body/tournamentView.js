@@ -1,10 +1,10 @@
-import { reload, truncate } from '../../engine/utils.js';
+import { loggedFetch, reload, truncate } from '../../engine/utils.js';
 import { error } from '../../engine/error.js';
 import { getLanguageDict } from '../../engine/language.js';
 import { getUsername } from './profile.js';
 
 const joinTournament = async (tournament_name) => {
-    const response = await fetch(`/api/tournament/${tournament_name}/`, {
+    const response = await loggedFetch(fetch)(`/api/tournament/${tournament_name}/`, {
         method: 'PUT',
         credentials: 'include',
         headers: {
@@ -126,7 +126,7 @@ const renderRow = (tournament, rowId, div, data, username) => {
 };
 
 const getTournament = async (tournament_name) => {
-    const response = await fetch(`/api/tournament/${tournament_name}/`, {
+    const response = await loggedFetch(fetch)(`/api/tournament/${tournament_name}/`, {
         method: 'GET',
         credentials: 'include',
         headers: {
