@@ -27,6 +27,8 @@ const errorDict = [
     {'name': 'Network error', 'en': en.networkError, 'fr': fr.networkError, 'es': es.networkError},
     {'name': 'Please wait the end of the other game', 'en': en.pleaseWaitTheEndOfTheOtherGame, 'fr': fr.pleaseWaitTheEndOfTheOtherGame, 'es': es.pleaseWaitTheEndOfTheOtherGame},
     {'name': 'Too many games created', 'en': en.tooManyGamesCreated, 'fr': fr.tooManyGamesCreated, 'es': es.tooManyGamesCreated},
+    {'name': 'Password changed', 'en': en.passwordChanged, 'fr': fr.passwordChanged, 'es': es.passwordChanged},
+    {'name': 'Password cannot be empty', 'en': en.passwordCannotBeEmpty, 'fr': fr.passwordCannotBeEmpty, 'es': es.passwordCannotBeEmpty},
 ];
 
 export const addErrorContainer = (div) => {

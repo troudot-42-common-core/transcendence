@@ -7,8 +7,8 @@ export const data = {
     'invalidAvatar': 'Invalid avatar',
     'avatarTooBig': 'Avatar too big',
     'usernameAlreadyExists': 'Username already exists',
-    'invalidNewPassword': 'Invalid password new password',
-    'invalidOldPassword': 'Invalid password old password',
+    'invalidNewPassword': 'Invalid new password',
+    'invalidOldPassword': 'Invalid old password',
     'errorWhileCreatingTournament': 'Error while creating tournament',
     'invalidNameOrNumberOfPlayers': 'Invalid name or number of players',
     'alreadyFriends': 'You\'re already friends',
@@ -22,4 +22,6 @@ export const data = {
     'networkError': 'Network error',
     'pleaseWaitTheEndOfTheOtherGame': 'Please wait the end of the other game',
     'tooManyGamesCreated': 'Too many games created',
+    'passwordChanged': 'Password changed',
+    'passwordCannotBeEmpty': 'Password cannot be empty',
 };

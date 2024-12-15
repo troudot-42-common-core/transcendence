@@ -22,4 +22,6 @@ export const data = {
     'networkError': 'Erreur réseau',
     'pleaseWaitTheEndOfTheOtherGame': 'Veuillez attendre la fin de l\'autre partie',
     'tooManyGamesCreated': 'Trop de parties créées',
+    'passwordChanged': 'Mot de passe changé',
+    'passwordCannotBeEmpty': 'Le mot de passe ne peut pas être vide',
 };

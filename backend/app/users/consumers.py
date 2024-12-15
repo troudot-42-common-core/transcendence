@@ -18,3 +18,4 @@ class StatusConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def set_user_status(self: AsyncWebsocketConsumer, user: any, status: bool) -> None:
         Users.objects.filter(pk=user.pk).update(is_online=status)
+        

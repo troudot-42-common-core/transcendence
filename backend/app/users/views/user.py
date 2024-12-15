@@ -1,6 +1,6 @@
 import os
 from PIL import Image
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -52,6 +52,7 @@ class UsernameView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         rename_avatar(instance, request.data['username'])
         user.save()
+        logout(request)
         login(request, instance)
         message = {'username': user.validated_data['username']}
         response = Response(message, status=status.HTTP_200_OK)
@@ -122,4 +123,6 @@ class PasswordView(APIView):
             return Response(status=status.HTTP_400_BAD_REQUEST)
         instance.set_password(request.data['new_password'])
         instance.save()
+        logout(request)
+        login(request, instance)
         return Response(status=status.HTTP_200_OK)

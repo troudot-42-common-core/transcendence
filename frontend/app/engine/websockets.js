@@ -1,5 +1,6 @@
 import { address, wsRoutes } from './routes.js';
 import { getAllFolders, isAMatch, replaceWildcard } from './utils.js';
+import { loggedIn } from './tokens.js';
 
 export class WebSocketHandler {
     constructor() {
@@ -13,11 +14,11 @@ export class WebSocketHandler {
         this.ws.delete(wsName);
     }
 
-    openWs(wsRoute, wsPath, reset = false) {
+    async openWs(wsRoute, wsPath, reset = false) {
         if (this.ws.has(wsRoute.name))
             if (reset) this.closeWs(wsRoute.name);
             else return;
-
+        await loggedIn();
         const websocket = new WebSocket(wsPath);
         this.ws.set(wsRoute.name, websocket);
     }
@@ -40,7 +41,7 @@ export class WebSocketHandler {
             this.closeWs(name);
     }
 
-    check(match) {
+    async check(match) {
         const matchingRoutes = wsRoutes.filter(wsRoute => isAMatch(match.route.path, wsRoute.path));
 
         this.ws.forEach((websocket, name) => {
@@ -57,7 +58,7 @@ export class WebSocketHandler {
                 wsPath = wsRoute.wsPath;
             else
                 wsPath = address + '/' + replaceWildcard(wsRoute.path, match.args);
-            try { this.openWs(wsRoute, wsPath); }
+            try { await this.openWs(wsRoute, wsPath); }
             catch { return ; }
         }
     }

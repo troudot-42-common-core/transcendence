@@ -72,7 +72,7 @@ export const loggedNavbar = async (render, div) => {
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar" id="navbarCollapse">
                     <div class="navbar-nav mx-lg-auto">
                         <a class="nav-link nav-item active" href="/" id="home" data-link></a>
                         <a class="nav-link nav-item" href="/games/" id="game" data-link></a>

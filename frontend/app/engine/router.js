@@ -35,7 +35,7 @@ export const router = async (logged) => {
         match = potentialMatches.find(potentialMatch => potentialMatch.route.path === '/');
         history.replaceState({urlPath: '/'}, '', '/');
     }
-    websocketsHandler.check(match);
+    await websocketsHandler.check(match);
     await renderHeader();
     await renderBody(body, match);
     addErrorContainer(body);

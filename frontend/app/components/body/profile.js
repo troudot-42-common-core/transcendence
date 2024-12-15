@@ -73,6 +73,7 @@ const setPassword = async (oldPass, newPass) => {
         },
         body: JSON.stringify({old_password: oldPass, new_password: newPass}),
     });
+
     if (response.status !== 200) {
         switch (response.status) {
             case 404:
@@ -90,6 +91,7 @@ const setPassword = async (oldPass, newPass) => {
         }
         return ;
     }
+    error('Password changed', 'success');
     return true;
 };
 
@@ -215,9 +217,15 @@ export const profile = async (render, div) => {
 
         const setNewPassButton = document.getElementById('setNewPassButton');
         setNewPassButton.addEventListener('click', async () => {
-            const oldPass = document.getElementById('oldPassValue').value;
-            const newPass = document.getElementById('newPassValue').value;
-            await setPassword(oldPass, newPass);
+            const oldPass = document.getElementById('oldPassValue');
+            const newPass = document.getElementById('newPassValue');
+            if (oldPass.value === '' || newPass.value === '') {
+                error('Password cannot be empty', 'warning');
+                return ;
+            }
+            await setPassword(oldPass.value, newPass.value);
+            oldPass.value = '';
+            newPass.value = '';
         });
     }
 };
