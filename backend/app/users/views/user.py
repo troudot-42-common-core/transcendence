@@ -109,6 +109,28 @@ class GetUserInfoView(APIView):
             user = UserSerializer(instance)
         return Response(user.data, status=status.HTTP_200_OK)
 
+class StatsView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self:APIView, request: any, username: str) -> Response:
+        try:
+            instance = Users.objects.get(username=username)
+        except Users.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        games_played = instance.scores.count()
+        games_won = instance.scores.filter(games__winner=instance).count()
+        games_lost = games_played - games_won
+        win_rate = (games_won / games_played) * 100 if games_played > 0 else 0
+        total_points = sum(instance.scores.values_list('score', flat=True))
+        data = {
+            'games_played': games_played,
+            'games_won': games_won,
+            'games_lost': games_lost,
+            'win_rate': win_rate,
+            'total_points': total_points
+        }
+        return Response(data, status=status.HTTP_200_OK)
+
 class PasswordView(APIView):
     permission_classes = [IsAuthenticated]
 

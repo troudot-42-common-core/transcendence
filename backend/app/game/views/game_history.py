@@ -28,7 +28,7 @@ class GamesHistoryForUserView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self: APIView, request: Any, username: str) -> Response: # noqa: ANN401
-        finished_games = Game.objects.filter(status='finished').order_by('-created_at')
+        finished_games = Game.objects.filter(Q(status='finished') | Q(status='saving')).order_by('-created_at')
         games_history = []
         i = 0
         for game in finished_games:

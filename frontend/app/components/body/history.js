@@ -23,20 +23,19 @@ const fillTableWithHistory = (table, history) => {
         tr.appendChild(tdPlayer2);
         tr.appendChild(tdScore2);
         tr.appendChild(tdBlockchainHash);
-	    table.appendChild(tr);
+        table.appendChild(tr);
     }
 };
 
-const calculateWinRate = (history, username) => {
-    let win = 0;
-    let lose = 0;
+const getScores = (history, username) => {
+    const scores = [];
     for (let i = 0; i < history.length; i++) {
-        if (history[i]['winner'] === username)
-            win++;
+        if (history[i]['player1'] === username)
+            scores.push(history[i]['score1']);
         else
-            lose++;
+            scores.push(history[i]['score2']);
     }
-    return Math.round(win / (win + lose) * 100);
+    return scores;
 };
 
 export const getHistory = async (table, username='') => {
@@ -55,7 +54,7 @@ export const getHistory = async (table, username='') => {
         return ;
     fillTableWithHistory(table, history);
     if (username !== '')
-        return(calculateWinRate(history, username));
+        return(getScores(history, username));
 };
 
 export const history =  async (render, div) => {

@@ -19,6 +19,20 @@ export const getUserInfo = async (args) => {
     return await response.json();
 };
 
+const getStats = async (username) => {
+    const response = await loggedFetch(fetch)(`/api/stats/${username}`, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+    });
+    if (response.status !== 200)
+        return null;
+    return await response.json();
+};
+
+
 export const user = async (render, div, args) => {
     const language = localStorage.getItem('language') || 'en';
     const data = getLanguageDict(language, 'profile');
@@ -26,14 +40,16 @@ export const user = async (render, div, args) => {
     if (userInfo === null)
         return errorHandler(render, div, 'User not found');
     const avatar_url = userInfo.avatar;
+    const stats = await getStats(userInfo.username) || {};
 
     render(div, `
         <style>
             .table-responsive {
                 text-align: center;
                 margin-top: 20px;
-                margin-left: 30vw;
-                width: 40vw;
+                margin-left: 10vw;
+                width: 80vw;
+                margin-bottom: 10vh;
             }    
             td, th {
               text-align: center;
@@ -49,6 +65,37 @@ export const user = async (render, div, args) => {
                 margin-top: 10px;
                 margin-bottom: 10px;
             }
+            .statsContainer {
+                width: 80vw;
+                margin-left: 10vw;
+                margin-top: 20px;
+                margin-bottom: 10vh;
+                // text-align: center;
+
+            }
+            .stats-item {
+                display: inline-block;
+                margin: 15px;
+                width: 13vw;
+                height: 9vw;
+                background-color: var(--bg-tournament);
+                padding: 10px;
+                text-align: center;
+                font-size: 1.5vw;
+                border-radius: 10px;
+            }
+            .chartsContainer {
+                margin-top: 20px;
+                margin-left: 20vw;
+                width: 80vw;
+                }
+            .card {
+                background-color: var(--bg-tournament);
+                border-radius: 10px;
+                height: 300px;
+                width: 100%;
+                margin-bottom: 5vh;
+            }
         </style>
         <div class="container profileContainer">
             <img src="${avatar_url}" alt="Avatar" class="avatar rounded-circle" style="width: 100px; height: 100px;">
@@ -60,9 +107,49 @@ export const user = async (render, div, args) => {
                 </div>
             </div>
         </div>
+        <div class="chartsContainer">
+            <div class="row my-2">
+                <div class="col-md-6 py-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="chLine"></canvas>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3 py-1">
+                    <div class="card">
+                        <div class="card-body">
+                            <canvas id="chDonut"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        <dixv class="statsContainer">
+            <div class="stats-item">
+                <p>${data.totalGames}</p>
+                <p>${stats.total_games || 0}</p>
+            </div>
+            <div class="stats-item">
+                <p>${data.gamesWon}</p>
+                <p>${stats.games_won || 0}</p>
+            </div>
+            <div class="stats-item">
+                <p>${data.gamesLost}</p>
+                <p>${stats.games_lost || 0}</p>
+            </div>
+            <div class="stats-item">
+                <p>${data.winRate}</p>
+                <p>${Math.round(stats.win_rate) || 0}%</p>
+            </div>
+            <div class="stats-item">
+                <p>${data.totalPoints}</p>
+                <p>${stats.total_points || 0}</p>
+            </div>
+        </div>
         <div class="table-responsive">
             <h2 id="titleLastGames">${data.lastGames}</h2>
-            <h4 id="titleWinRate" style="display: none"></h4>
             <table class="table table-bordered mb-0 bg-table">
                  <thead>
                       <tr>
@@ -70,6 +157,7 @@ export const user = async (render, div, args) => {
                           <th scope="col">${data.score}</th>
                           <th scope="col">${data.secondPlayer}</th>
                           <th scope="col">${data.score}</th>
+                          <th scope="col">${data.blockchainHash}</th>
                       </tr>
                  </thead>
                  <tbody id="table"></tbody>
@@ -93,10 +181,8 @@ export const user = async (render, div, args) => {
             break;
     }
     const table = document.getElementById('table');
-    const winrate = await getHistory(table, userInfo.username);
-    if (winrate !== undefined)
-        document.getElementById('titleWinRate').style = 'display: block';
-        document.getElementById('titleWinRate').innerText = `${data.winRate}: ${winrate}%`;
+    const scoresData = await getHistory(table, userInfo.username);
+
     const requestFriendButton = document.getElementById('requestFriendButton');
     switch (userInfo.friendship_status) {
         case null:
@@ -159,4 +245,58 @@ export const user = async (render, div, args) => {
         }
         return await reload(true);
     });
+
+    const chLine = document.getElementById('chLine');
+    const chartData = {
+        labels: ['1', '2', '3', '4', '5'],
+        datasets: [{
+            data: scoresData ? scoresData.reverse() : [],
+            label: data.lastGames + ' (' + data.score + ')',
+            backgroundColor: 'transparent',
+            borderColor: '#f96d00',
+            borderWidth: 4,
+            pointBackgroundColor: '#f96d00'
+        }]
+    };
+    if (chLine) {
+        new Chart(chLine, { // eslint-disable-line
+            type: 'line',
+            data: chartData,
+            options: {
+                scales: {
+                  xAxes: [{
+                    reverse: true,
+                    gridLines: {
+                      color: 'rgba(0,0,0,0.05)'
+                    }
+                  }],
+                  yAxes: [{
+                    borderDash: [5, 5],
+                    gridLines: {
+                      color: 'rgba(0,0,0,0)',
+                      fontColor: '#fff'
+                    }
+                  }]
+                }
+              }
+        });
+    }
+
+    const chDonutData = {
+        labels: [data.gamesWon, data.gamesLost],
+        datasets: [
+          {
+            backgroundColor: ['green', 'red'],
+            borderWidth: 0,
+            data: [stats.games_won || 0, stats.games_lost || 0]
+          },
+        ],
+    };
+    const chDonut = document.getElementById('chDonut');
+    if (chDonut) {
+      new Chart(chDonut, {  // eslint-disable-line
+          type: 'pie',
+          data: chDonutData,
+      });
+    }
 };

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views.user import UsernameView, PasswordView, AvatarView, GetUserInfoView
+from .views.user import UsernameView, PasswordView, AvatarView, GetUserInfoView, StatsView
 from .views.auth import RegisterView, LoginView, LogoutView, MyTokenRefreshView, VerifyView
 from .views.otp import RegisterOTPView, LogoutOTPView
 from .views.oauth import OAuthCallbackView
@@ -32,6 +32,7 @@ urlpatterns = [
     path('usernames/', UsernameView.as_view()),
     path('passwords/', PasswordView.as_view()),
     path('avatars/', AvatarView.as_view()),
+    path('stats/<str:username>/', StatsView.as_view()),
 
     # Games history
     path('games/history/', GamesHistoryView.as_view()),

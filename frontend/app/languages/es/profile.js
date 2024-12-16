@@ -27,4 +27,9 @@ export const data = {
     'acceptedFriends': 'Amigos aceptados',
     'noAcceptedFriendsYet': 'Sin amigos todavía',
     'winRate': 'Rendimiento',
+    'totalGames': 'Partidas totales',
+    'gamesWon': 'Partidas ganadas',
+    'gamesLost': 'Partidas perdidas',
+    'totalPoints': 'Puntos totales',
+    'blockchainHash': 'Transacción de blockchain',
 };

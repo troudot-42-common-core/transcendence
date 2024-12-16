@@ -69,7 +69,7 @@ const addFriend = async (username) => {
 };
 
 const patchFriendship = async (username, action) => {
-    await loggedFetch(fetch)(`/api/friendships/${username}/`, {
+    await loggedFetch(fetch)('/api/friendships/', {
         method: 'PATCH',
         credentials: 'include',
         headers: {

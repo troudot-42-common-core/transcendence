@@ -27,4 +27,9 @@ export const data = {
     'acceptedFriends': 'Accepted Friends',
     'noAcceptedFriendsYet': 'No friends yet',
     'winRate': 'Win rate',
+    'totalGames': 'Total Games',
+    'gamesWon': 'Games Won',
+    'gamesLost': 'Games Lost',
+    'totalPoints': 'Total Points',
+    'blockchainHash': 'Blockchain Transaction',
 };

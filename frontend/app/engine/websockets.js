@@ -51,6 +51,10 @@ export class WebSocketHandler {
         if (matchingRoutes.length === 0)
             return;
         for (const wsRoute of matchingRoutes) {
+            if (wsRoute.name === 'status' && match.route.authorization !== 2) {
+                continue;
+            }
+
             let wsPath;
             const wsPathFolders = getAllFolders(wsRoute.wsPath);
 

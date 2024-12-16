@@ -13,6 +13,7 @@
 - [x] Blockchain
 - [x] Multi-languages
 - [x] Multi-platforms
+- [x] User and Game Stats Dashboards 
 
 ### Install
 ```zsh
