@@ -11,67 +11,75 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
+import json
+import logging
+import base64
+import socket
+import threading
+import time
+from queue import Queue
+from typing import Any, Dict, List, Optional
 
 # Utiliser les variables d'environnement
-API42_UID = os.environ.get('API42_UID')
-API42_SECRET = os.environ.get('API42_SECRET')
-API42_REDIRECT_URI = os.environ.get('API42_REDIRECT_URI')
-API42_BASE_URL = os.environ.get('API42_BASE_URL')
-
+API42_UID: Optional[str] = os.environ.get('API42_UID')
+API42_SECRET: Optional[str] = os.environ.get('API42_SECRET')
+API42_REDIRECT_URI: Optional[str] = os.environ.get('API42_REDIRECT_URI')
+API42_BASE_URL: Optional[str] = os.environ.get('API42_BASE_URL')
 
 # BlockChain
-BLOCKCHAIN_PUBLIC_KEY=os.environ.get('BLOCKCHAIN_PUBLIC_KEY')
-BLOCKCHAIN_PRIVATE_KEY=os.environ.get('BLOCKCHAIN_PRIVATE_KEY')
-BLOCKCHAIN_INFURA_API_KEY=os.environ.get('BLOCKCHAIN_INFURA_API_KEY')
-BLOCKCHAIN_CONTRACT_ADDRESS=os.environ.get('BLOCKCHAIN_CONTRACT_ADDRESS')
+BLOCKCHAIN_PUBLIC_KEY: Optional[str] = os.environ.get('BLOCKCHAIN_PUBLIC_KEY')
+BLOCKCHAIN_PRIVATE_KEY: Optional[str] = os.environ.get('BLOCKCHAIN_PRIVATE_KEY')
+BLOCKCHAIN_INFURA_API_KEY: Optional[str] = os.environ.get('BLOCKCHAIN_INFURA_API_KEY')
+BLOCKCHAIN_CONTRACT_ADDRESS: Optional[str] = os.environ.get('BLOCKCHAIN_CONTRACT_ADDRESS')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ['SECRET_KEY']
+SECRET_KEY: str = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG: bool = True
 
 # OAuth Settings
-CLIENT_ID = os.environ['CLIENT_ID']
-CLIENT_SECRET = os.environ['CLIENT_SECRET']
-REDIRECT_URI = os.environ['REDIRECT_URI']
+CLIENT_ID: str = os.environ['CLIENT_ID']
+CLIENT_SECRET: str = os.environ['CLIENT_SECRET']
+REDIRECT_URI: str = os.environ['REDIRECT_URI']
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS: List[str] = ['*']
 
 # ahead add also the address IP of the machine else the server will not be able to connect for other network devices
 
-CORS_ALLOWED_ORIGINS = [
+CORS_ALLOWED_ORIGINS: List[str] = [
     'https://localhost',
     'https://127.0.0.1',
-    'https://frontend',]
+    'https://frontend',
+]
 
-CORS_ALLOW_HEADERS = [
+CORS_ALLOW_HEADERS: List[str] = [
     'content-type',
     'authorization',
     'x-csrftoken',
     'Access-Control-Allow-Origin'
 ]
 
-CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_CREDENTIALS: bool = True
 
-CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", os.environ['REDIS_PORT'])],
+CHANNEL_LAYERS: Dict[str, Dict[str, Any]] = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', os.environ['REDIS_PORT'])],
         },
     },
 }
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS: List[str] = [
     'daphne',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -87,23 +95,23 @@ INSTALLED_APPS = [
     'blockchain.apps.BlockchainAppConfig',
 ]
 
-AUTH_USER_MODEL = "users.Users"
-OTP_USER_MODEL = "users.OTP"
+AUTH_USER_MODEL: str = 'users.Users'
+OTP_USER_MODEL: str = 'users.OTP'
 
 from datetime import timedelta
 
-SIMPLE_JWT = {
+SIMPLE_JWT: Dict[str, Any] = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
     'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
 }
 
-PASSWORD_HASHERS = [
-    "django.contrib.auth.hashers.BCryptSHA256PasswordHasher",
+PASSWORD_HASHERS: List[str] = [
+    'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE: List[str] = [
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -114,15 +122,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-SESSION_SAVE_EVERY_REQUEST = True
+SESSION_SAVE_EVERY_REQUEST: bool = True
 
-ROOT_URLCONF = 'app.urls'
+ROOT_URLCONF: str = 'app.urls'
 
-TEMPLATES = [
+TEMPLATES: List[Dict[str, Any]] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'static']
-        ,
+        'DIRS': [BASE_DIR / 'static'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -135,10 +142,10 @@ TEMPLATES = [
     },
 ]
 
-ASGI_APPLICATION = 'app.asgi.application'
-WSGI_APPLICATION = 'app.wsgi.application'
+ASGI_APPLICATION: str = 'app.asgi.application'
+WSGI_APPLICATION: str = 'app.wsgi.application'
 
-REST_FRAMEWORK = {
+REST_FRAMEWORK: Dict[str, Any] = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'app.authentication.NewJWTAuthentication',
     ),
@@ -150,7 +157,7 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
+DATABASES: Dict[str, Dict[str, Any]] = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.environ['DB_NAME'],
@@ -164,7 +171,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: List[Dict[str, str]] = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -179,28 +186,132 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE: str = 'en-us'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE: str = 'UTC'
 
-USE_I18N = True
+USE_I18N: bool = True
 
-USE_TZ = True
-
+USE_TZ: bool = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL: str = 'static/'
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+MEDIA_URL: str = '/media/'
+MEDIA_ROOT: str = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
+
+class SafeJsonEncoder(json.JSONEncoder):
+    def default(self: 'SafeJsonEncoder', obj: any) -> any:
+        if isinstance(obj, bytes):
+            return base64.b64encode(obj).decode('utf-8')
+        try:
+            return super().default(obj)
+        except TypeError:
+            return str(obj)
+
+class CustomJSONFormatter(logging.Formatter):
+    def format(self: 'CustomJSONFormatter', record: logging.LogRecord) -> str:
+        log_data: Dict[str, Any] = {
+            'timestamp': self.formatTime(record, self.datefmt),
+            'level': record.levelname,
+            'logger': record.name,
+            'message': record.getMessage(),
+        }
+        if record.exc_info:
+            log_data['exc_info'] = self.formatException(record.exc_info)
+        if hasattr(record, 'stack_info'):
+            log_data['stack_info'] = record.stack_info
+        
+        # Include all other attributes of the record
+        for key, value in record.__dict__.items():
+            if key not in log_data and not key.startswith('_'):
+                log_data[key] = value
+
+        return json.dumps(log_data, cls=SafeJsonEncoder)
+
+class LogstashHandler(logging.Handler):
+    def __init__(self: 'LogstashHandler', host: str, port: int) -> None:
+        super().__init__()
+        self.host: str = host
+        self.port: int = port
+        self.formatter: CustomJSONFormatter = CustomJSONFormatter()
+        self.queue: Queue = Queue()
+        self.thread: threading.Thread = threading.Thread(target=self._send_logs, daemon=True)
+        self.thread.start()
+
+    def emit(self: 'LogstashHandler', record: logging.LogRecord) -> None:
+        try:
+            log_entry: str = self.formatter.format(record)
+            self.queue.put_nowait(log_entry)
+        except Exception:
+            self.handleError(record)
+
+    def _send_logs(self: 'LogstashHandler') -> None:
+        while True:
+            try:
+                log_entries: List[str] = []
+                log_entries.append(self.queue.get())
+                while not self.queue.empty() and len(log_entries) < 100:
+                    log_entries.append(self.queue.get_nowait())
+                
+                sock: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                sock.settimeout(5)
+                sock.connect((self.host, self.port))
+                for entry in log_entries:
+                    sock.sendall(entry.encode('utf-8') + b'\n')
+                sock.close()
+            except Exception as e:
+                print(f'Failed to send logs to Logstash: {str(e)}')
+                for entry in log_entries:
+                    self.queue.put(entry)
+                time.sleep(5)
+
+# Logging configuration
+LOGGING: Dict[str, Any] = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'json': {
+            '()': CustomJSONFormatter,
+        },
+    },
+    'handlers': {
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'json',
+        },
+        'logstash': {
+            'level': 'DEBUG',
+            'class': __name__ + '.LogstashHandler',
+            'host': 'logstash',
+            'port': 5002,
+        },
+    },
+    'root': {
+        'handlers': ['console', 'logstash'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'logstash'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'django.server': {
+            'handlers': ['console', 'logstash'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+    },
+}

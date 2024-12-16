@@ -116,7 +116,10 @@ export const replaceWildcard = (path, args) => {
 };
 
 export const loggedFetch = (fetchFunction) => async (...args) => {
-    const shouldBeLogged = routes.find(route => isAMatch(window.location.pathname, route.path)).authorization === 2;
+    const match = routes.find(route => isAMatch(window.location.pathname, route.path)) || null;
+    let shouldBeLogged = false;
+    if (match)
+        shouldBeLogged = match.authorization === 2;
     if (shouldBeLogged && !await loggedIn()) {
         await navbarRender(false);
         return await router(false);
