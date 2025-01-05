@@ -13,7 +13,6 @@ bitarray==3.0.0
 certifi==2024.8.30
 cffi==1.16.0
 channels==4.0.0
-channels-redis==4.2.0
 charset-normalizer==3.4.0
 ckzg==2.0.1
 constantly==23.10.4
@@ -59,7 +58,6 @@ pyOpenSSL==24.1.0
 pyotp==2.9.0
 pyunormalize==16.0.0
 qrcode==8.0
-redis==5.0.8
 regex==2024.11.6
 requests==2.32.3
 rlp==4.0.1

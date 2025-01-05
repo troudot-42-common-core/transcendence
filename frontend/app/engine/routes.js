@@ -31,7 +31,7 @@ export const routes = [
     { path: '/games/*/', view: (app, args) => game(render, app, args), authorization: a.Logged, name: 'game' },
     { path: '/history/', view: (app, args) => history(render, app, args), authorization: a.Logged, name: 'history' },
     { path: '/tournament/', view: (app, args) => tournament(render, app, args), authorization: a.Logged, name: 'tournament' },
-    { path: '/tournament/*/', view: (app, args) => tournamentView(render, app, args), authorization: a.Logged, name: 'tournamentView' },
+    { path: '/tournament/*', view: (app, args) => tournamentView(render, app, args), authorization: a.Logged, name: 'tournamentView' },
     { path: '/create_tournament/', view: (app, args) => createTournament(render, app, args), authorization: a.Logged, name: 'create_tournament' },
     { path: '/register/', view: (app, args) => register(render, app, args), authorization: a.Unlogged, name: 'register' },
     { path: '/login/', view: (app, args) => login(render, app, args), authorization: a.Unlogged, name: 'login' },
@@ -41,10 +41,11 @@ export const routes = [
     { path: '/user/*/', view: (app, args) => user(render, app, args), authorization: a.Logged, name: 'user' },
     { path: '/welcome/', view: (app, args) => welcome(render, app, args), authorization: a.Unlogged, name: 'welcome'},
     { path: '/error/404/', view: (app) => error(render, app, '404'), authorization: a.Everyone, name: 'error'}
-    ];
+];
 
 export const wsRoutes = [
     { path: '*', wsPath: address + '/status/', pageOnly: false, name: 'status' },
+    { path: '/tournament/*', wsPath: address + '/tournament/*/', pageOnly: true, name: 'tournamentView' },
     { path: '/games/', wsPath: address + '/games/', pageOnly: true, name: 'games' },
-    { path: '/games/*', wsPath: address + '/games/*/', pageOnly: true, name: 'game' }
-    ];
+    { path: '/games/*', wsPath: address + '/games/*/', pageOnly: true, name: 'game' },
+];

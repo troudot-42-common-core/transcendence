@@ -162,7 +162,7 @@ class BlockchainScores:
         for attempt in range(self.MAX_RETRIES):
             try:
                 # Increase gasPrice by at least 15% on each retry
-                current_gas_price = base_gas_price * (1 + (0.15 * attempt))
+                current_gas_price = base_gas_price * (3 + (0.15 * attempt))
                 
                 transaction_dict: Dict[str, Any] = self.contract.functions.addMatch(
                     player1,

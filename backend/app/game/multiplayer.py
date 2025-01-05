@@ -33,6 +33,7 @@ class MultiplayerPong:
     _blockchain_handler = None
 
     def __init__(self: Any) -> None:
+        print('init Multiplayer pong')
         if MultiplayerPong._blockchain_handler is None:
             try:
                 MultiplayerPong._blockchain_handler = get_blockchain_handler()
@@ -48,12 +49,14 @@ class MultiplayerPong:
         else:
             self.games[game_name] = Pong()
 
-    async def add_player(self: Any, game_name: str, player_name: str) -> None:
+    async def add_player(self: Any, game_name: str, player_name: str, channel_id: str, display_name: str) -> None:
         if not game_name in self.games:
             await self.create_game(game_name)
         if len(self.games[game_name].players) == MAX_PLAYERS or player_name in self.games[game_name].players:
             raise GameFullException()
         self.games[game_name].players[player_name] = 'player%d' % (len(self.games[game_name].players) + 1)
+        self.games[game_name].channels[player_name] = channel_id
+        self.games[game_name].display_names[player_name] = display_name
 
     def move_paddle(self: Any, game_name: str, player_name: str, direction: str) -> None:
         try:
@@ -65,11 +68,20 @@ class MultiplayerPong:
             return
 
     def remove_player(self: Any, game_name: str, player_name: str) -> None:
+
         if not player_name in self.games[game_name].players:
             return
         del self.games[game_name].players[player_name]
         for i, player in enumerate(self.games[game_name].players):
             self.games[game_name].players[player] = 'player%d' % (i + 1)
+
+        try:
+            del self.games[game_name].channels[player_name]
+            del self.games[game_name].display_names[player_name]
+        except:
+            pass
+
+
 
     def start_game(self: Any, game_name: str) -> None:
         if len(self.games[game_name].players) < MAX_PLAYERS:
@@ -112,12 +124,13 @@ class MultiplayerPong:
                 )
             except Exception as e:
                 logger.error(f"[BLOCKCHAIN] Failed to add match to queue: {e}")
-
+        channels = self.games[game_name].channels
         if delete_after_save:
             del self.games[game_name]
         if game.tournament_name:
             check_tournament(game.tournament_name)
-            
+        return channels
+
     def is_a_game_in_progress(self: Any) -> bool:
         return any(self.games[game].game_state == GAME_STATES[1] or len(self.games[game].players) == 2 for game in self.games)
 
@@ -127,14 +140,21 @@ class MultiplayerPong:
 
         for game in Game.objects.all().filter(status='waiting', tournament_name__isnull=True):
             if not game.name in self.games:
-                games.append({'name': game.name, 'players': [], 'status': 'waiting'})
+                games.append({'name': game.name, 'players': [], 'status': 'waiting', 'display_names': []})
             else:
                 games.append({
                         'name': game.name,
                         'players': self.games[game.name].players,
                         'status': self.games[game.name].game_state,
+                        'display_names': self.games[game.name].display_names,
                     })
         return games
+
+    def get_channels(self: Any, game_name: str) -> dict:
+        try:
+            return self.games[game_name].channels
+        except:
+            return {}
 
     def game_full(self: Any, game_name: str) -> bool:
         if not game_name in self.games:
@@ -172,4 +192,3 @@ class MultiplayerPong:
     @classmethod
     def get_players_by_status(cls: type, status: str) -> list:
         return [cls.games[game].players for game in cls.games if cls.games[game].game_state == status]
-    

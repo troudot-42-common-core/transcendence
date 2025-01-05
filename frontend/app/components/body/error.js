@@ -1,5 +1,7 @@
 export const error = (render, div, errorCode) => {
-    render(div, `
+  render(
+    div,
+    `
         <style>
             .container-fluid {
                 width: 70vw;
@@ -12,10 +14,11 @@ export const error = (render, div, errorCode) => {
             h1 {
                 text-align: center;
             }
-            
+
         </style>
         <div class="container-fluid">
             <h1>ERROR: ${errorCode}</h1>
         </div>
-    `);
+    `,
+  );
 };

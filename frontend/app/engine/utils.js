@@ -108,9 +108,10 @@ export const isAMatch = (actualPath, routePath) => {
 
 export const replaceWildcard = (path, args) => {
     const routeFolders = getAllFolders(path);
+    const tmpArgs = args.slice();
     for (let i = 0; routeFolders[i]; i++) {
         if (routeFolders[i] === '*')
-            routeFolders[i] = args.shift();
+            routeFolders[i] = tmpArgs.shift();
     }
     return routeFolders.join('/') + '/';
 };

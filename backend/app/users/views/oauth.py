@@ -74,7 +74,7 @@ class OAuthCallbackView(APIView):
         except (Users.DoesNotExist, UserNameAlreadyExists):
             if second_request:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
-            user_data = {'username': username, 'password': make_password(Users.objects.make_random_password()), 'avatar': avatar, 'oauth_connected': True, 'self_hosted_avatar': False}
+            user_data = {'display_name': username, 'username': username, 'password': make_password(Users.objects.make_random_password()), 'avatar': avatar, 'oauth_connected': True, 'self_hosted_avatar': False}
             user = Users(**user_data)
             user.save()
         login(request, user)

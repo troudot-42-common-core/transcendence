@@ -1,4 +1,3 @@
-import os
 from PIL import Image
 from django.contrib.auth import login, logout
 from rest_framework import status
@@ -11,26 +10,16 @@ from users.models.users import Users
 from ..serializers import UserSerializer, GetUserInfoSerializer
 
 def save_avatar(instance: Users, avatar_file: any) -> None:
-    avatar = Image.open(avatar_file)
+    try:
+        avatar = Image.open(avatar_file)
+    except:
+        return
     if avatar.format != 'JPEG':
         return
     avatar.thumbnail((200, 200), Image.Resampling.LANCZOS)
     avatar_path = f'../../app/media/avatars/{instance.username}.jpg'
     avatar.save(avatar_path)
     instance.avatar = avatar_path.replace('../../app/media', '')
-    instance.save()
-
-def rename_avatar(instance: Users, new_username: str) -> None:
-    if not instance.self_hosted_avatar:
-        return
-    old_avatar = instance.avatar
-    old_avatar_path = f'../../app/media/{old_avatar}'
-    new_avatar_path = f'../../app/media/avatars/{new_username}.jpg'
-    old_avatar = Image.open(old_avatar_path)
-    old_avatar.save(new_avatar_path)
-    if os.path.exists(old_avatar_path) and instance.avatar != '/avatars/default_avatar.jpg':
-        os.remove(old_avatar_path)
-    instance.avatar = new_avatar_path.replace('../../app/media', '')
     instance.save()
 
 class UsernameView(APIView):
@@ -41,20 +30,17 @@ class UsernameView(APIView):
         return Response(message, status=status.HTTP_200_OK)
 
     def put(self: APIView, request: any) -> Response:
-        if Users.objects.filter(username=request.data['username']).exists():
-            return Response(status=status.HTTP_409_CONFLICT)
         try:
             instance = Users.objects.get(username=request.user.username)
         except Users.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        user = UserSerializer(instance, data={'username': request.data['username']}, partial=True)
+        user = UserSerializer(instance, data={'display_name': request.data['username']}, partial=True)
         if not user.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        rename_avatar(instance, request.data['username'])
         user.save()
         logout(request)
         login(request, instance)
-        message = {'username': user.validated_data['username']}
+        message = {'username': user.validated_data['display_name']}
         response = Response(message, status=status.HTTP_200_OK)
         token = get_tokens_for_user(instance)
         response.headers['Access-Control-Allow-Credentials'] = 'true'
@@ -91,6 +77,7 @@ class AvatarView(APIView):
         if 'avatar' not in request.FILES:
             return Response(status=status.HTTP_400_BAD_REQUEST)
         avatar_file = request.FILES['avatar']
+
         save_avatar(instance, avatar_file)
         message = {'avatar_url': instance.avatar}
         return Response(message, status=status.HTTP_200_OK)
@@ -143,8 +130,10 @@ class PasswordView(APIView):
             return Response(status=status.HTTP_401_UNAUTHORIZED)
         if request.data['old_password'] == request.data['new_password']:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        instance.set_password(request.data['new_password'])
-        instance.save()
+        user = UserSerializer(instance, data={'password': request.data['new_password']}, partial=True)
+        if not user.is_valid():
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        user.save()
         logout(request)
         login(request, instance)
         return Response(status=status.HTTP_200_OK)

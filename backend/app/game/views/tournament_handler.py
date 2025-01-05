@@ -1,3 +1,4 @@
+import re
 from math import pow
 from uuid import uuid4
 from random import sample
@@ -7,12 +8,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from django.core.exceptions import ObjectDoesNotExist
+from django.db.models import Q
 from users.views.friendships import get_attribute
 from users.models.users import Users
 from ..models import Tournament, TournamentRow
 from ..serializers import TournamentSerializer
 from . import game_handler
-
+from ..consumers.tournament import TournamentConsumer
+import asyncio
 
 nb_of_players_available = [
     2, 4, 8, 16
@@ -27,7 +30,7 @@ class AlreadyFullException(Exception):
 class TournamentHasBeenDeletedException(Exception):
     pass
 
-def check_tournament(tournament: Tournament or str) -> None:
+def check_tournament(tournament: any) -> None:
     if type(tournament) == str:
         try:
             tournament = Tournament.objects.get(name=tournament)
@@ -39,7 +42,7 @@ def check_tournament(tournament: Tournament or str) -> None:
         return
     if tournament.status == 'in_progress':
         final = True if row.level == tournament.nb_of_rows else False
-        if row.games.filter(status='finished').count() == row.nb_players // 2:
+        if row.games.filter(Q(status='saving') | Q(status='finished')).count() == row.nb_players // 2:
             row.status = 'finished'
             if final:
                 tournament.status = 'finished'
@@ -50,6 +53,7 @@ def check_tournament(tournament: Tournament or str) -> None:
                 transfer_winners_of_row(row, new_row)
                 create_row_games(new_row, tournament.name)
                 new_row.save()
+    asyncio.run(TournamentConsumer.update_status(tournament.name))
 
 def transfer_winners_of_row(row: TournamentRow, new_row: TournamentRow) -> None:
     if row.games.count() != new_row.nb_players:
@@ -77,6 +81,7 @@ def join_or_leave_row(tournament: Tournament, row: TournamentRow, action: str, u
             if not tournament.rows.count():
                 tournament.delete()
                 raise TournamentHasBeenDeletedException
+    asyncio.run(TournamentConsumer.update_status(tournament.name))
 
 def create_row_games(row: TournamentRow, tournament_name: str) -> None:
     if row.players.count() != row.nb_players:
@@ -137,7 +142,12 @@ class TournamentsHandlerView(APIView):
         tournament_name = get_attribute(request.data, 'tournament_name')
         if not nb_of_players or nb_of_players not in nb_of_players_available or not tournament_name:
             return Response(status=status.HTTP_400_BAD_REQUEST)
-        nb_of_rows = nb_of_players // 2
+        if Tournament.objects.filter(tournament_name=tournament_name).exists():
+            return Response(status=status.HTTP_409_CONFLICT)
+        if re.match(r'^[a-zA-Z0-9_]+$', tournament_name) is None or len(tournament_name) > 18 or len(tournament_name) < 3:
+            return Response(status=status.HTTP_400_BAD_REQUEST)
+        nb_of_stages = lambda n: n.bit_length() - 1
+        nb_of_rows = nb_of_stages(nb_of_players)
         tournament = Tournament.objects.create(
             tournament_name=tournament_name,
             name=str(uuid4())[:18],

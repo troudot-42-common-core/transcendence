@@ -23,8 +23,8 @@ services:
       - ./frontend/certs:/etc/nginx/ssl:ro
     restart: on-failure
     depends_on:
-        backend:
-            condition: service_healthy
+      backend:
+        condition: service_healthy
 
   backend:
     image: backend
@@ -41,8 +41,8 @@ services:
             - .idea/
         - action: rebuild
           path: /backend/app/requirements.txt
-    ports:
-      - ${API_PORT}:${API_PORT}
+    expose:
+      - ${API_PORT}
     environment:
       - PORT=${API_PORT}
       - SECRET_KEY=${SECRET_KEY}
@@ -51,7 +51,6 @@ services:
       - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=${DB_HOST}
       - DB_PORT=${DB_PORT}
-      - REDIS_PORT=${REDIS_PORT}
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
       - REDIRECT_URI=${REDIRECT_URI}
@@ -60,45 +59,34 @@ services:
     env_file:
       - .env
     healthcheck:
-        test: curl --fail http://localhost:${API_PORT}/health/ || exit 1
-        interval: 15s
-        timeout: 10s
-        retries: 3
-        start_period: 10s
+      test: curl --fail http://localhost:${API_PORT}/health/ || exit 1
+      interval: 15s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
     volumes:
       - avatars:/app/media/avatars
     restart: on-failure
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_started
-      logstash:
-        condition: service_healthy
+      - postgres
 
   postgres:
     image: postgres:16.3-alpine3.19
-    ports:
-      - ${DB_PORT}:${DB_PORT}
+    # ports: # TO REMOVE FOR CORRECTION
+    # - ${DB_PORT}:${DB_PORT}
     expose:
       - ${DB_PORT}
     environment:
       POSTGRES_USER: ${DB_USER}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ${DB_NAME}
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${DB_USER} -d ${DB_NAME}"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
   redis:
     image: redis:6.2.6-alpine
     expose:
       - ${REDIS_PORT}
     volumes:
-      - ./backend/redis.conf:/usr/local/etc/redis/redis.conf
-    command: redis-server /usr/local/etc/redis/redis.conf
+      - postgres:/var/lib/postgresql/data
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
@@ -163,9 +151,5 @@ services:
 volumes:
   postgres:
     driver: local
-  frontend:
-    driver: local
   avatars:
-    driver: local
-  elasticsearch_data:
     driver: local

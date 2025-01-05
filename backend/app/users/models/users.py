@@ -4,6 +4,7 @@ from django.contrib.auth.models import AbstractBaseUser
 from users.managers import UserManager
 
 class Users(AbstractBaseUser):
+    display_name = models.CharField(max_length=16)
     username = models.CharField(max_length=16, unique=True)
     is_active = models.BooleanField(default=True)
     is_online = models.BooleanField(default=False)

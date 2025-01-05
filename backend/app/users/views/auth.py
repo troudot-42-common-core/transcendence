@@ -1,5 +1,5 @@
 import urllib.parse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login, logout
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -28,7 +28,9 @@ class RegisterView(APIView):
     def post(self: APIView, request: any) -> Response:
         if Users.objects.filter(username=request.data["username"]).exists():
             return Response({"Username already exists"}, status=status.HTTP_409_CONFLICT)
-        user = UserSerializer(data=request.data)
+        data = request.data.copy()
+        data['display_name'] = data['username']
+        user = UserSerializer(data=data)
         if not user.is_valid():
             return Response(status=status.HTTP_400_BAD_REQUEST)
         user.save()
@@ -44,7 +46,7 @@ class LoginView(APIView):
             otp = request.data["otp"]
         except:
             otp = None
-        user = authenticate(request, username=username, password=password)
+        user = Users.objects.filter(username=username).first()
         if user is None:
             return Response({"message": "Invalid username"}, status=status.HTTP_404_NOT_FOUND)
         if not user.check_password(password):

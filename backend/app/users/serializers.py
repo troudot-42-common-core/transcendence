@@ -1,3 +1,4 @@
+import re
 from typing import Any, Dict, Optional
 from django.db.models import Q
 from django.contrib.auth import get_user_model
@@ -8,24 +9,57 @@ from rest_framework_simplejwt.state import token_backend
 from users.sessions import check_session
 from users.models.users import Users
 from users.models.friendships import Friends
-
+from django.core.exceptions import ValidationError
 
 class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'username', 'password', 'avatar', 'otp_enabled', 'is_online', 'oauth_connected', 'password', 'self_hosted_avatar']
+        fields = ['id', 'display_name', 'username', 'password', 'avatar', 'otp_enabled', 'is_online', 'oauth_connected', 'password', 'self_hosted_avatar']
 
-    def create(self, validated_data: dict) -> Users:   # noqa: ANN101
-        user = Users.objects.create(username=validated_data['username'])
+    def validate_display_name(self: serializers.ModelSerializer, value: str) -> str:
+        if not re.match(r'^[a-zA-Z0-9]+$', value):
+            raise serializers.ValidationError(
+            )
+        return value
+
+    def validate_username(self: serializers.ModelSerializer, value: str) -> str:
+        if not re.match(r'^[a-zA-Z0-9]+$', value):
+            raise serializers.ValidationError()
+        return value
+
+    def valid_password(self: serializers.ModelSerializer, value: str) -> None:
+        if not re.match(r'^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>~+=\-_/]).+$', value):
+            raise serializers.ValidationError(
+            )
+        if len(value) < 8:
+            raise serializers.ValidationError(
+            )
+
+    def create(self, validated_data: dict) -> Users:  # noqa: ANN101
+        try:
+            self.valid_password(validated_data['password'])
+        except ValidationError:
+            raise serializers.ValidationError(
+            )
+        user = Users.objects.create(
+            username=validated_data['username'],
+            display_name=validated_data['display_name']
+        )
         user.set_password(validated_data['password'])
         user.save()
         return user
 
-    def update(self, instance: Users, validated_data: dict) -> Users:   # noqa: ANN101
+
+    def update(self, instance: Users, validated_data: dict) -> Users:  # noqa: ANN101
+        instance.display_name = validated_data.get('display_name', instance.display_name)
         instance.username = validated_data.get('username', instance.username)
         if 'password' in validated_data:
-            instance.set_password(validated_data.get('password', instance.password))
+            try:
+                self.valid_password(validated_data['password'])
+            except ValidationError:
+                raise serializers.ValidationError()
+            instance.set_password(validated_data['password'])
         instance.avatar = validated_data.get('avatar', instance.avatar)
         instance.otp_enabled = validated_data.get('otp_enabled', instance.otp_enabled)
         instance.is_online = validated_data.get('is_online', instance.is_online)
@@ -38,7 +72,7 @@ class GetUserInfoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Users
-        fields = ['id', 'username', 'avatar', 'status', 'friendship_status', 'oauth_connected']
+        fields = ['id', 'display_name', 'username', 'avatar', 'status', 'friendship_status', 'oauth_connected']
 
     def get_status(self: serializers.ModelSerializer, instance: Users) -> Optional[str]:
         from game.multiplayer import MultiplayerPong

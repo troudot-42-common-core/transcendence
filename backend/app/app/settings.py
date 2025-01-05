@@ -11,20 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 import os
 from pathlib import Path
-import json
-import logging
-import base64
-import socket
-import threading
-import time
-from queue import Queue
 from typing import Any, Dict, List, Optional
-
-# Utiliser les variables d'environnement
-API42_UID: Optional[str] = os.environ.get('API42_UID')
-API42_SECRET: Optional[str] = os.environ.get('API42_SECRET')
-API42_REDIRECT_URI: Optional[str] = os.environ.get('API42_REDIRECT_URI')
-API42_BASE_URL: Optional[str] = os.environ.get('API42_BASE_URL')
 
 # BlockChain
 BLOCKCHAIN_PUBLIC_KEY: Optional[str] = os.environ.get('BLOCKCHAIN_PUBLIC_KEY')
@@ -42,7 +29,7 @@ BASE_DIR: Path = Path(__file__).resolve().parent.parent
 SECRET_KEY: str = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: bool = True
+DEBUG = False
 
 # OAuth Settings
 CLIENT_ID: str = os.environ['CLIENT_ID']
@@ -68,18 +55,15 @@ CORS_ALLOW_HEADERS: List[str] = [
 
 CORS_ALLOW_CREDENTIALS: bool = True
 
-CHANNEL_LAYERS: Dict[str, Dict[str, Any]] = {
-    'default': {
-        'BACKEND': 'channels_redis.core.RedisChannelLayer',
-        'CONFIG': {
-            'hosts': [('redis', os.environ['REDIS_PORT'])],
-        },
-    },
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
 }
 
 # Application definition
 
-INSTALLED_APPS: List[str] = [
+INSTALLED_APPS = [
     'daphne',
     'rest_framework',
     'rest_framework_simplejwt',
@@ -100,8 +84,8 @@ OTP_USER_MODEL: str = 'users.OTP'
 
 from datetime import timedelta
 
-SIMPLE_JWT: Dict[str, Any] = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=10),
     'REFRESH_TOKEN_LIFETIME': timedelta(weeks=1),
     'AUTH_HEADER_TYPES': ('Bearer',),
     'AUTH_HEADER_NAME': 'HTTP_AUTHORIZATION',
@@ -208,110 +192,4 @@ MEDIA_ROOT: str = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
-
-class SafeJsonEncoder(json.JSONEncoder):
-    def default(self: 'SafeJsonEncoder', obj: any) -> any:
-        if isinstance(obj, bytes):
-            return base64.b64encode(obj).decode('utf-8')
-        try:
-            return super().default(obj)
-        except TypeError:
-            return str(obj)
-
-class CustomJSONFormatter(logging.Formatter):
-    def format(self: 'CustomJSONFormatter', record: logging.LogRecord) -> str:
-        log_data: Dict[str, Any] = {
-            'timestamp': self.formatTime(record, self.datefmt),
-            'level': record.levelname,
-            'logger': record.name,
-            'message': record.getMessage(),
-        }
-        if record.exc_info:
-            log_data['exc_info'] = self.formatException(record.exc_info)
-        if hasattr(record, 'stack_info'):
-            log_data['stack_info'] = record.stack_info
-        
-        # Include all other attributes of the record
-        for key, value in record.__dict__.items():
-            if key not in log_data and not key.startswith('_'):
-                log_data[key] = value
-
-        return json.dumps(log_data, cls=SafeJsonEncoder)
-
-class LogstashHandler(logging.Handler):
-    def __init__(self: 'LogstashHandler', host: str, port: int) -> None:
-        super().__init__()
-        self.host: str = host
-        self.port: int = port
-        self.formatter: CustomJSONFormatter = CustomJSONFormatter()
-        self.queue: Queue = Queue()
-        self.thread: threading.Thread = threading.Thread(target=self._send_logs, daemon=True)
-        self.thread.start()
-
-    def emit(self: 'LogstashHandler', record: logging.LogRecord) -> None:
-        try:
-            log_entry: str = self.formatter.format(record)
-            self.queue.put_nowait(log_entry)
-        except Exception:
-            self.handleError(record)
-
-    def _send_logs(self: 'LogstashHandler') -> None:
-        while True:
-            try:
-                log_entries: List[str] = []
-                log_entries.append(self.queue.get())
-                while not self.queue.empty() and len(log_entries) < 100:
-                    log_entries.append(self.queue.get_nowait())
-                
-                sock: socket.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                sock.settimeout(5)
-                sock.connect((self.host, self.port))
-                for entry in log_entries:
-                    sock.sendall(entry.encode('utf-8') + b'\n')
-                sock.close()
-            except Exception as e:
-                print(f'Failed to send logs to Logstash: {str(e)}')
-                for entry in log_entries:
-                    self.queue.put(entry)
-                time.sleep(5)
-
-# Logging configuration
-LOGGING: Dict[str, Any] = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'json': {
-            '()': CustomJSONFormatter,
-        },
-    },
-    'handlers': {
-        'console': {
-            'level': 'DEBUG',
-            'class': 'logging.StreamHandler',
-            'formatter': 'json',
-        },
-        'logstash': {
-            'level': 'DEBUG',
-            'class': __name__ + '.LogstashHandler',
-            'host': 'logstash',
-            'port': 5002,
-        },
-    },
-    'root': {
-        'handlers': ['console', 'logstash'],
-        'level': 'INFO',
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['console', 'logstash'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-        'django.server': {
-            'handlers': ['console', 'logstash'],
-            'level': 'INFO',
-            'propagate': False,
-        },
-    },
-}
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

@@ -19,6 +19,7 @@ class GamesHistoryView(APIView):
             game_json = {}
             for j, score in enumerate(scores, start=1):
                 game_json['player%d' % j] = score.player.username
+                game_json['display%d' % j]= score.player.display_name
                 game_json['score%d' % j] = score.score
             game_json['blockchain_hash'] = game.blockchain_hash
             games_history.append(game_json)
@@ -40,6 +41,7 @@ class GamesHistoryForUserView(APIView):
             game_json = {}
             for j, score in enumerate(scores, start=1):
                 game_json['player%d' % j] = score.player.username
+                game_json['display%d' % j]= score.player.display_name
                 game_json['score%d' % j] = score.score
                 game_json['winner'] = game.winner.username
             game_json['blockchain_hash'] = game.blockchain_hash

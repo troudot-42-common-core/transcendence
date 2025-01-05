@@ -7,12 +7,12 @@ GAME_SIZE = [400, 250]
 PADDLE_SIZE = [10, 50]
 BALL_SIZE = 10
 INIT_RADIANS = [[235 * math.pi / 180, 300 * math.pi / 180], [55 * math.pi / 180, 125 * math.pi / 180]]
-MAX_SCORE = 3
+MAX_SCORE = 5
 MAX_PLAYERS = 2
-FPS = 40
+FPS = 60
 FPS_SERVER = (1000 / FPS / 1000) if FPS > 0 else 0.1
-GLOBAL_SPEED = 2  # 1=SLOW  2=NORMAL 3=FAST
-BALL_SPEED = (2 * GLOBAL_SPEED) * (60 / FPS)
+GLOBAL_SPEED = 1  # 1=SLOW  2=NORMAL 3=FAST
+BALL_SPEED = (3.5 * GLOBAL_SPEED) * (60 / FPS)
 PADDLE_SPEED = (12 * GLOBAL_SPEED)
 
 
@@ -36,6 +36,8 @@ class Pong:
             'angle': uniform(random_radians[0], random_radians[1]) - math.pi / 2
         }
         self.players = {}
+        self.channels = {}
+        self.display_names = {}
         self.player1 = {
             'x': 0,
             'y': GAME_SIZE[1] / 2 - PADDLE_SIZE[1] / 2,

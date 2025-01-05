@@ -43,7 +43,7 @@ export class WebSocketHandler {
 
     async check(match) {
         const matchingRoutes = wsRoutes.filter(wsRoute => isAMatch(match.route.path, wsRoute.path));
-
+        
         this.ws.forEach((websocket, name) => {
             const wsRoute = matchingRoutes.find(route => route.name === name);
             this.wsCloser(name, wsRoute);
@@ -54,16 +54,19 @@ export class WebSocketHandler {
             if (wsRoute.name === 'status' && match.route.authorization !== 2) {
                 continue;
             }
-
+            
             let wsPath;
             const wsPathFolders = getAllFolders(wsRoute.wsPath);
 
-            if (wsPathFolders.length === wsPathFolders.filter(folder => folder !== '*').length)
+            if (wsPathFolders.length === wsPathFolders.filter(folder => folder !== '*').length){
                 wsPath = wsRoute.wsPath;
-            else
+            }
+            else {
                 wsPath = address + '/' + replaceWildcard(wsRoute.path, match.args);
+            }
             try { await this.openWs(wsRoute, wsPath); }
             catch { return ; }
+        
         }
     }
 

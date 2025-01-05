@@ -1,71 +1,67 @@
 import { getLanguageDict } from '../../engine/language.js';
 import { loggedFetch } from '../../engine/utils.js';
 
-
 const fillTableWithHistory = (table, history) => {
-    for (let i = 0; i < history.length; i++) {
-	    const tr = document.createElement('tr');
-        const tdPlayer1 = document.createElement('td');
-        const tdPlayer2 = document.createElement('td');
-        const tdScore1 = document.createElement('td');
-        const tdScore2 = document.createElement('td');
-        const tdBlockchainHash = document.createElement('td');
-        tdPlayer1.innerHTML = `<a href="/user/${history[i]['player1']}" data-link>${history[i]['player1']}</a>`;
-        tdPlayer2.innerHTML = `<a href="/user/${history[i]['player2']}" data-link>${history[i]['player2']}</a>`;
-        tdScore1.innerHTML = history[i]['score1'];
-        tdScore2.innerHTML = history[i]['score2'];
-        if (history[i]['blockchain_hash'] === null)
-            tdBlockchainHash.innerHTML = '-';
-        else
-            tdBlockchainHash.innerHTML = `<a href="https://sepolia.etherscan.io/tx/${history[i]['blockchain_hash']}">Etherscan</a>`;
-        tr.appendChild(tdPlayer1);
-        tr.appendChild(tdScore1);
-        tr.appendChild(tdPlayer2);
-        tr.appendChild(tdScore2);
-        tr.appendChild(tdBlockchainHash);
-        table.appendChild(tr);
-    }
+  for (let i = 0; i < history.length; i++) {
+    const tr = document.createElement('tr');
+    const tdPlayer1 = document.createElement('td');
+    const tdPlayer2 = document.createElement('td');
+    const tdScore1 = document.createElement('td');
+    const tdScore2 = document.createElement('td');
+    const tdBlockchainHash = document.createElement('td');
+    tdPlayer1.innerHTML = `<a href="/user/${history[i]['player1']}" data-link>${history[i]['display1']}</a>`;
+    tdPlayer2.innerHTML = `<a href="/user/${history[i]['player2']}" data-link>${history[i]['display2']}</a>`;
+    tdScore1.innerHTML = history[i]['score1'];
+    tdScore2.innerHTML = history[i]['score2'];
+    if (history[i]['blockchain_hash'] === null)
+      tdBlockchainHash.innerHTML = '-';
+    else
+      tdBlockchainHash.innerHTML = `<a href="https://sepolia.etherscan.io/tx/${history[i]['blockchain_hash']}">Etherscan</a>`;
+    tr.appendChild(tdPlayer1);
+    tr.appendChild(tdScore1);
+    tr.appendChild(tdPlayer2);
+    tr.appendChild(tdScore2);
+    tr.appendChild(tdBlockchainHash);
+    table.appendChild(tr);
+  }
 };
 
 const getScores = (history, username) => {
-    const scores = [];
-    for (let i = 0; i < history.length; i++) {
-        if (history[i]['player1'] === username)
-            scores.push(history[i]['score1']);
-        else
-            scores.push(history[i]['score2']);
-    }
-    return scores;
+  const scores = [];
+  for (let i = 0; i < history.length; i++) {
+    if (history[i]['player1'] === username) scores.push(history[i]['score1']);
+    else scores.push(history[i]['score2']);
+  }
+  return scores;
 };
 
-export const getHistory = async (table, username='') => {
-    const response = await loggedFetch(fetch)(`/api/games/history/${username}`, {
-        method: 'GET',
-        credentials: 'include',
-        headers: {
-            'Content-Type': 'application/json',
-        }
-    });
+export const getHistory = async (table, username = '') => {
+  const response = await loggedFetch(fetch)(`/api/games/history/${username}`, {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
 
-    if (response.status !== 200)
-        return ;
-    const history = await response.json();
-    if (!history.length)
-        return ;
-    fillTableWithHistory(table, history);
-    if (username !== '')
-        return(getScores(history, username));
+  if (response.status !== 200) return;
+  const history = await response.json();
+  if (!history.length) return;
+  fillTableWithHistory(table, history);
+  if (username !== '') return getScores(history, username);
 };
 
-export const history =  async (render, div) => {
-    const language = localStorage.getItem('language') || 'en';
-    const data = getLanguageDict(language, 'history');
+export const history = async (render, div) => {
+  const language = localStorage.getItem('language') || 'en';
+  const data = getLanguageDict(language, 'history');
 
-    render (div, `
+  render(
+    div,
+    `
         <style>
             table {
                 width: 10%;
-            }    
+            }
             td, th {
               text-align: center;
             }
@@ -74,10 +70,10 @@ export const history =  async (render, div) => {
             }
         </style>
         <div class="container-fluid d-flex
-         align-items-center  
-         justify-content-center  
-         min-vh-100"> 
-         
+         align-items-center
+         justify-content-center
+         min-vh-100">
+
          <div class="table-responsive">
               <table class="table table-bordered mb-0 bg-table">
                    <thead>
@@ -93,9 +89,9 @@ export const history =  async (render, div) => {
               </table>
          </div>
       </div>
-    `);
+    `,
+  );
 
-    const table = document.getElementById('table');
-    await getHistory(table);
-
+  const table = document.getElementById('table');
+  await getHistory(table);
 };
