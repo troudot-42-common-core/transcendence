@@ -17,7 +17,7 @@
 
 ### Install
 ```zsh
-git clone git@github.com:0x21x/ft_transcendence.git
+git clone git@github.com:troudot-42-common-core/transcendence.git
 ```
 
 ## Run
